@@ -81,8 +81,6 @@ MemorySharp is divided into several parts. Here is list the all the features ava
 - **Helpers available**
  -  ApplicationFinder: Find the right process to interact
  -  HandleManipulator: Convert an handle to a process or a thread
- -  Randomizer: Generate random numbers, strings and Guid
- -  SerializationHelper: Serialize and deserialize managed object into XML
  -  Generic singleton: Implement a singleton on any of your class
 
 ## Premium Features ##
