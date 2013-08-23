@@ -53,9 +53,6 @@ ipch/
 # ReSharper is a .NET coding add-in
 _ReSharper*
 
-# License Header Manager
-*.licenseheader
-
 # NCrunch
 *.ncrunch*
 .*crunch*.local.xml
