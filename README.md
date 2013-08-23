@@ -158,6 +158,9 @@ Always dreamt to make Memory Editing ? This online documentation will learn you 
 - **Manipulating data types** *(not available yet, coming soon)*
 - **Using helpers in the library** *(not available yet, coming soon)*
 
+### Support ###
+MemorySharp Commercial edition also include a dedicated forum for premium support regarding the library and the online documentation.
+
 Compare the different MemorySharp edition on the [official website of MemorySharp](http://binarysharp.com/products/memorysharp#editions).
 
 ## Examples ##
