@@ -7,15 +7,16 @@
  * See the file LICENSE for more information.
 */
 
-using System;
-
 namespace Binarysharp.MemoryManagement.Internals
 {
     /// <summary>
-    /// Define a factory for the library.
+    /// Defines a element with a name.
     /// </summary>
-    /// <remarks>At the moment, the factories are just disposable.</remarks>
-    public interface IFactory : IDisposable
+    public interface INamedElement : IApplicableElement
     {
+        /// <summary>
+        /// The name of the element.
+        /// </summary>
+        string Name { get; }
     }
 }

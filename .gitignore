@@ -1,3 +1,8 @@
+# Commercial edition ignore
+COPYING.txt
+gpl-3.0.txt
+README.md
+
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 [Oo]bj/
 

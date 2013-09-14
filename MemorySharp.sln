@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemorySharp", "MemorySharp\MemorySharp.csproj", "{78A6F97D-5CA8-4E92-8E17-2545983C9555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemorySharpDirtyTests", "MemorySharpDirtyTests\MemorySharpDirtyTests.csproj", "{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemorySharpTests", "MemorySharpTests\MemorySharpTests.csproj", "{E3EFE942-113F-46AA-9CF4-A51473D9E8B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{84C4DD62-B81F-4116-A853-29A21EE74A99}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,20 +37,6 @@ Global
 		{78A6F97D-5CA8-4E92-8E17-2545983C9555}.Release|Win32.ActiveCfg = Release|Any CPU
 		{78A6F97D-5CA8-4E92-8E17-2545983C9555}.Release|x64.ActiveCfg = Release|x64
 		{78A6F97D-5CA8-4E92-8E17-2545983C9555}.Release|x64.Build.0 = Release|x64
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Debug|x64.ActiveCfg = Debug|x64
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Debug|x64.Build.0 = Debug|x64
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Release|Win32.ActiveCfg = Release|Any CPU
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Release|x64.ActiveCfg = Release|x64
-		{4B8548BF-2BA9-47CA-A3AF-B1DCF7614A9D}.Release|x64.Build.0 = Release|x64
 		{E3EFE942-113F-46AA-9CF4-A51473D9E8B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E3EFE942-113F-46AA-9CF4-A51473D9E8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3EFE942-113F-46AA-9CF4-A51473D9E8B8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

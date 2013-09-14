@@ -7,22 +7,24 @@
  * See the file LICENSE for more information.
 */
 
-using System;
-
 namespace Binarysharp.MemoryManagement.Internals
 {
     /// <summary>
-    /// Defines an IDisposable interface with a known state.
+    /// Defines an element able to be activated in the remote process.
     /// </summary>
-    public interface IDisposableState : IDisposable
+    public interface IApplicableElement : IDisposableState
     {
         /// <summary>
-        /// Gets a value indicating whether the element is disposed.
+        /// States if the element is enabled.
         /// </summary>
-        bool IsDisposed { get; }
+        bool IsEnabled { get; set; }
         /// <summary>
-        /// Gets a value indicating whether the element must be disposed when the Garbage Collector collects the object.
+        /// Disables the element.
         /// </summary>
-        bool MustBeDisposed { get; }
+        void Disable();
+        /// <summary>
+        /// Enables the element.
+        /// </summary>
+        void Enable();
     }
 }

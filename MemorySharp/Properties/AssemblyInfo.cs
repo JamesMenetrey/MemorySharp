@@ -1,9 +1,9 @@
 ﻿/*
- * This file is part of MemorySharp.
+ * MemorySharp Library v1.0.0
+ * http://www.binarysharp.com/
+ *
  * Copyright (C) 2012-2013 Jämes Ménétrey (a.k.a. ZenLulz).
- * <http://www.binarysharp.com/> <zenlulz@binarysharp.com>
- * 
- * This library is licensed under the GNU GPLv3 License.
+ * This library is released under the MIT License.
  * See the file LICENSE for more information.
 */
 
@@ -13,11 +13,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MemorySharp Community (GPL)")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("MemorySharp")]
+[assembly: AssemblyDescription("MemorySharp is a C# based memory editing library targeting Windows applications, offering various functions to extract and inject data and codes into remote processes to allow interoperability.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Binarysharp")]
-[assembly: AssemblyProduct("MemorySharp Community (GPL)")]
+[assembly: AssemblyProduct("MemorySharp")]
 [assembly: AssemblyCopyright("Copyright © 2012-2013 ZenLulz")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

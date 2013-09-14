@@ -1,9 +1,9 @@
 ﻿/*
- * This file is part of MemorySharp.
+ * MemorySharp Library v1.0.0
+ * http://www.binarysharp.com/
+ *
  * Copyright (C) 2012-2013 Jämes Ménétrey (a.k.a. ZenLulz).
- * <http://www.binarysharp.com/> <zenlulz@binarysharp.com>
- * 
- * This library is licensed under the GNU GPLv3 License.
+ * This library is released under the MIT License.
  * See the file LICENSE for more information.
 */
 

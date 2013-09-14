@@ -778,6 +778,111 @@
             <param name="handle">A handle to validate.</param>
             <param name="argumentName">The name of the argument that represents the handle in its original function.</param>
         </member>
+        <member name="T:Binarysharp.MemoryManagement.Helpers.Randomizer">
+            <summary>
+            Static helper class providing tools for generating random numbers or strings.
+            </summary>
+        </member>
+        <member name="F:Binarysharp.MemoryManagement.Helpers.Randomizer.Random">
+            <summary>
+            Provides random engine.
+            </summary>
+        </member>
+        <member name="F:Binarysharp.MemoryManagement.Helpers.Randomizer.AllowedChars">
+            <summary>
+            Allowed characters in random strings.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.Randomizer.GenerateNumber(System.Int32,System.Int32)">
+            <summary>
+            Returns a random number within a specified range.
+            </summary>
+            <param name="minValue">The inclusive lower bound of the random number returned.</param>
+            <param name="maxValue">The exclusive upper bound of the random number returned. maxValue must be greater than or equal to minValue.</param>
+            <returns>A 32-bit signed integer greater than or equal to minValue and less than maxValue.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.Randomizer.GenerateNumber(System.Int32)">
+            <summary>
+            Returns a nonnegative random number less than the specified maximum.
+            </summary>
+            <param name="maxValue">The exclusive upper bound of the random number to be generated. maxValue must be greater than or equal to zero.</param>
+            <returns>A 32-bit signed integer greater than or equal to zero, and less than maxValue.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.Randomizer.GenerateNumber">
+            <summary>
+            Returns a nonnegative random number.
+            </summary>
+            <returns>A 32-bit signed integer greater than or equal to zero and less than <see cref="F:System.Int32.MaxValue"/>.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.Randomizer.GenerateString(System.Int32,System.Int32)">
+            <summary>
+            Returns a random string where its size is within a specified range.
+            </summary>
+            <param name="minSize">The inclusive lower bound of the size of the string returned.</param>
+            <param name="maxSize">The exclusive upper bound of the size of the string returned.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.Randomizer.GenerateGuid">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Guid"/> structure.
+            </summary>
+            <returns>A new <see cref="T:System.Guid"/> object.</returns>
+        </member>
+        <member name="T:Binarysharp.MemoryManagement.Helpers.SerializationHelper">
+            <summary>
+            Static helper class providing tools for serializing/deserializing objects.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.SerializationHelper.ExportToXmlFile``1(``0,System.String,System.Text.Encoding)">
+            <summary>
+            Serializes the specified object and writes the XML document to the specified path.
+            </summary>
+            <typeparam name="T">The type of the object to serialize.</typeparam>
+            <param name="obj">The object to serialize.</param>
+            <param name="path">The path where the file is saved.</param>
+            <param name="encoding">The encoding to generate.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.SerializationHelper.ExportToXmlFile``1(``0,System.String)">
+            <summary>
+            Serializes the specified object and writes the XML document to the specified path using <see cref="P:System.Text.Encoding.UTF8"/> encoding.
+            </summary>
+            <typeparam name="T">The type of the object to serialize.</typeparam>
+            <param name="obj">The object to serialize.</param>
+            <param name="path">The path where the file is saved.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.SerializationHelper.ExportToXmlString``1(``0)">
+            <summary>
+            Serializes the specified object and returns the XML document.
+            </summary>
+            <typeparam name="T">The type of the object to serialize.</typeparam>
+            <param name="obj">The object to serialize.</param>
+            <returns>XML document of the serialized object.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.SerializationHelper.ImportFromXmlFile``1(System.String,System.Text.Encoding)">
+            <summary>
+            Deserializes the specified file into an object.
+            </summary>
+            <typeparam name="T">The type of the object to deserialize.</typeparam>
+            <param name="path">The path where the object is read.</param>
+            <param name="encoding">The character encoding to use. </param>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.SerializationHelper.ImportFromXmlFile``1(System.String)">
+            <summary>
+            Deserializes the specified file into an object using <see cref="P:System.Text.Encoding.UTF8"/> encoding.
+            </summary>
+            <typeparam name="T">The type of the object to deserialize.</typeparam>
+            <param name="path">The path where the object is read.</param>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Helpers.SerializationHelper.ImportFromXmlString``1(System.String)">
+            <summary>
+            Deserializes the XML document to the specified object.
+            </summary>
+            <typeparam name="T">The type of the object to deserialize.</typeparam>
+            <param name="serializedObj">The string representing the serialized object.</param>
+            <returns>The deserialized object.</returns>
+        </member>
         <member name="T:Binarysharp.MemoryManagement.Helpers.Singleton`1">
             <summary>
             Static helper used to create or get a singleton from another class.
@@ -787,6 +892,11 @@
         <member name="F:Binarysharp.MemoryManagement.Helpers.Singleton`1.Instance">
             <summary>
             Gets the singleton of the given type.
+            </summary>
+        </member>
+        <member name="T:Binarysharp.MemoryManagement.Internals.IApplicableElement">
+            <summary>
+            Defines an element able to be activated in the remote process.
             </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Internals.IDisposableState">
@@ -804,6 +914,21 @@
             Gets a value indicating whether the element must be disposed when the Garbage Collector collects the object.
             </summary>
         </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.IApplicableElement.Disable">
+            <summary>
+            Disables the element.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.IApplicableElement.Enable">
+            <summary>
+            Enables the element.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Internals.IApplicableElement.IsEnabled">
+            <summary>
+            States if the element is enabled.
+            </summary>
+        </member>
         <member name="T:Binarysharp.MemoryManagement.Internals.IMarshalledValue">
             <summary>
             Interface representing a value within the memory of a remote process.
@@ -817,6 +942,58 @@
         <member name="P:Binarysharp.MemoryManagement.Internals.IMarshalledValue.Reference">
             <summary>
             The reference of the value. It can be directly the value or a pointer.
+            </summary>
+        </member>
+        <member name="T:Binarysharp.MemoryManagement.Internals.INamedElement">
+            <summary>
+            Defines a element with a name.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Internals.INamedElement.Name">
+            <summary>
+            The name of the element.
+            </summary>
+        </member>
+        <member name="T:Binarysharp.MemoryManagement.Internals.Manager`1">
+            <summary>
+            Class managing objects implementing <see cref="T:Binarysharp.MemoryManagement.Internals.INamedElement"/> interface.
+            </summary>
+        </member>
+        <member name="F:Binarysharp.MemoryManagement.Internals.Manager`1.InternalItems">
+            <summary>
+            The collection of the elements (writable).
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.Manager`1.DisableAll">
+            <summary>
+            Disables all items in the manager.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.Manager`1.EnableAll">
+            <summary>
+            Enables all items in the manager.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.Manager`1.Remove(System.String)">
+            <summary>
+            Removes an element by its name in the manager.
+            </summary>
+            <param name="name">The name of the element to remove.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.Manager`1.Remove(`0)">
+            <summary>
+            Remove a given element.
+            </summary>
+            <param name="item">The element to remove.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.Manager`1.RemoveAll">
+            <summary>
+            Removes all the elements in the manager.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Internals.Manager`1.Items">
+            <summary>
+            The collection of the elements.
             </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Internals.MarshalType`1">
