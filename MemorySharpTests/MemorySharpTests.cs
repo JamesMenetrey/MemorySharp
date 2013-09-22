@@ -46,7 +46,7 @@ namespace MemorySharpTests
             var address = new IntPtr(sharp.Modules.MainModule.BaseAddress.ToInt64() + offset.ToInt64());
 
             // Act
-            var relative = sharp.MakesRelative(address);
+            var relative = sharp.MakeRelative(address);
 
             // Assert
             Assert.AreEqual(offset, relative, "Couldn't get the relative address.");

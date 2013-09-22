@@ -245,13 +245,13 @@ namespace Binarysharp.MemoryManagement
             return new IntPtr(Modules.MainModule.BaseAddress.ToInt64() + address.ToInt64());
         }
         #endregion
-        #region MakesRelative
+        #region MakeRelative
         /// <summary>
         /// Makes a relative address from an absolute one based on the main module.
         /// </summary>
         /// <param name="address">The absolute address.</param>
         /// <returns>The relative address.</returns>
-        public IntPtr MakesRelative(IntPtr address)
+        public IntPtr MakeRelative(IntPtr address)
         {
             // Check if the absolute address is smaller than the main module base address
             if (address.ToInt64() < Modules.MainModule.BaseAddress.ToInt64())
