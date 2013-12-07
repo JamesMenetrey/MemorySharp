@@ -1,0 +1,3 @@
+[submodule "SubModules/Fasm.NET"]
+	path = SubModules/Fasm.NET
+	url = https://github.com/ZenLulz/Fasm.NET.git
