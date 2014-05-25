@@ -83,7 +83,7 @@ namespace Binarysharp.MemoryManagement.Windows.Mouse
         public override void ReleaseLeft()
         {
             var input = CreateInput();
-            input.Mouse.Flags = MouseFlags.RightUp;
+            input.Mouse.Flags = MouseFlags.LeftUp;
             WindowCore.SendInput(input);
         }
         #endregion
