@@ -114,8 +114,16 @@ namespace Binarysharp.MemoryManagement.Threading
             var ret = ThreadCore.NtQueryInformationThread(
                 ThreadCore.CreateRemoteThread(MemorySharp.Handle, address, marshalledParameter.Reference, ThreadCreationFlags.Suspended));
 
+            // Get the native thread previously created
+            // Loop until the native thread is retrieved
+            ProcessThread nativeThread;
+            do
+            {
+                nativeThread = MemorySharp.Threads.NativeThreads.FirstOrDefault(t => t.Id == ret.ThreadId);
+            } while (nativeThread == null);
+
             // Find the managed object corresponding to this thread
-            var result = new RemoteThread(MemorySharp, MemorySharp.Threads.NativeThreads.First(t => t.Id == ret.ThreadId), marshalledParameter);
+            var result = new RemoteThread(MemorySharp, nativeThread, marshalledParameter);
 
             // If the thread must be started
             if (isStarted)
