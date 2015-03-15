@@ -102,10 +102,11 @@ namespace Binarysharp.MemoryManagement.Memory
         /// Writes an array of bytes to the unmanaged block of memory.
         /// </summary>
         /// <param name="byteArray">The array of bytes to write.</param>
-        public void Write(byte[] byteArray)
+        /// <param name="index">The start position to copy bytes from</param>
+        public void Write(byte[] byteArray,int index = 0)
         {
             // Copy the array of bytes into the block of memory
-            Marshal.Copy(byteArray, 0, Address, Size);
+            Marshal.Copy(byteArray, index, Address, Size);
         }
         /// <summary>
         /// Write data to the unmanaged block of memory.
