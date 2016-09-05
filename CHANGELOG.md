@@ -2,6 +2,12 @@
 
 The log of changes made to MemorySharp Library.
 
+## V1.1.1 (05 September 2016)
+
+Bugfixes:
+
+- Threads created using the library are properly returned by the API.
+
 ## V1.1 (25 March 2014)
 
 Bugfixes:
