@@ -344,4 +344,4 @@ This is because there are so many people ready to share their skills that I deci
 ## Author
 
 This developer and the copyright holder of this library is [ZenLulz (Jämes Ménétrey)](https://github.com/ZenLulz).  
-The official website of MemorySharp is [www.binarysharp.com](http://ww.binarysharp.com).
+The official website of MemorySharp is [www.binarysharp.com](http://www.binarysharp.com).
