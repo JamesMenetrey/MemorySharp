@@ -310,7 +310,29 @@ window.Keyboard.Release(Keys.Down);
 ```
 
 
-## Credits ##
+## Git flow
+
+The branching strategy of the repository is based on the [git flow](https://github.com/nvie/gitflow) proposed by Vincent Driessen, as depicted at the end of this part.
+
+The central repo holds two main branches with an infinite lifetime:
+
+- _master_: contains the final and stable versions
+- _develop_: contains the current work
+
+Next to the main branches master and develop, our development model uses a variety of supporting branches to aid parallel development between team members, ease tracking of features, prepare for production releases and to assist in quickly fixing live production problems. Unlike the main branches, these branches always have a limited life time, since they will be removed eventually.
+
+The different types of branches we may use are:
+
+| Branch type | Prefix     |
+| ----------- | ---------- |
+|Feature      | _feature-_ |
+|Release      | _release-_ |
+|Hotfix       | _hotfix-_  |
+
+[![Git flow diagram](assets/git/gitflow.png)](assets/git/Git-branching-model.pdf)
+
+
+## Credits
 
 At the beginning, I thank my Notepad++ app, because it suffered so many crashes due to bad injections and wrong codes of my part.
 
@@ -319,7 +341,7 @@ More seriously, I thank the entire [Ownedcore](http://www.ownedcore.com "Ownedco
 This is because there are so many people ready to share their skills that I decided to publish a GPL-licensed version of MemorySharp.
 
 
-## Author ##
+## Author
 
 This developer and the copyright holder of this library is [ZenLulz (Jämes Ménétrey)](https://github.com/ZenLulz).  
 The official website of MemorySharp is [www.binarysharp.com](http://ww.binarysharp.com).
