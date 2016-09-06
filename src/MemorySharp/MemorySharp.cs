@@ -308,10 +308,9 @@ namespace Binarysharp.MemoryManagement
             var array = new T[count];
 
             // Read all the memory at once, much faster then reading each time individually
-            var bytes = ReadBytes(address, MarshalType<T>.Size*count, isRelative);
+            var bytes = ReadBytes(address, MarshalType<T>.Size * count, isRelative);
 
-            //If we check the type we can gain an additional boost of speed
-            //ofcourse if we wrote an unmanaged module and used that here itd go even faster then this.
+            // If we check the type we can gain an additional boost of speed
             if (typeof (T) != typeof (byte))
             {
                 for (var i = 0; i < count; i++)
@@ -321,11 +320,10 @@ namespace Binarysharp.MemoryManagement
             }
             else
             {
-                //Just copy the bytes
+                // Just copy the bytes
                 Buffer.BlockCopy(bytes,0,array,0,count);
             }
             
-
             return array;
         }
         /// <summary>

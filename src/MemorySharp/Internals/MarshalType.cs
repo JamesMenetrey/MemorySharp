@@ -17,7 +17,7 @@ namespace Binarysharp.MemoryManagement.Internals
     /// <summary>
     /// Static class providing tools for extracting information related to types.
     /// </summary>
-    /// <typeparam name="T">Type to analyse.</typeparam>
+    /// <typeparam name="T">Type to analyze.</typeparam>
     public static class MarshalType<T>
     {
         #region Properties
@@ -135,16 +135,17 @@ namespace Binarysharp.MemoryManagement.Internals
         }
         #endregion
         #region ByteArrayToObject
+
         /// <summary>
         /// Marshals an array of byte to a managed object.
         /// </summary>
         /// <param name="byteArray">The array of bytes corresponding to a managed object.</param>
-        /// <param name="index">Where to start conversion of bytes to the managed object</param>
+        /// <param name="index">[Optional] Where to start the conversion of bytes to the managed object.</param>
         /// <returns>A managed object.</returns>
         public static T ByteArrayToObject(byte[] byteArray, int index = 0)
         {
             // We'll tried to avoid marshalling as it really slows the process
-            // First, check if the type can be converted without marhsalling
+            // First, check if the type can be converted without marshalling
             switch (TypeCode)
             {
                 case TypeCode.Object:
@@ -168,7 +169,7 @@ namespace Binarysharp.MemoryManagement.Internals
                 case TypeCode.Byte:
                     return (T)(object)byteArray[index];
                 case TypeCode.Char:
-                    return (T)(object)Encoding.UTF8.GetChars(byteArray)[index]; //BitConverter.ToChar(byteArray, 0);
+                    return (T)(object)Encoding.UTF8.GetChars(byteArray)[index];
                 case TypeCode.Double:
                     return (T)(object)BitConverter.ToDouble(byteArray, index);
                 case TypeCode.Int16:
@@ -188,12 +189,13 @@ namespace Binarysharp.MemoryManagement.Internals
                 case TypeCode.UInt64:
                     return (T)(object)BitConverter.ToUInt64(byteArray, index);
             }
-            // Check if it's not a common type
+
             // Allocate a block of unmanaged memory
             using (var unmanaged = new LocalUnmanagedMemory(Size))
             {
                 // Write the array of bytes inside the unmanaged memory
                 unmanaged.Write(byteArray, index);
+
                 // Return a managed object created from the block of unmanaged memory
                 return unmanaged.Read<T>();
             }
