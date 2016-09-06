@@ -306,11 +306,26 @@ namespace Binarysharp.MemoryManagement
         {
             // Allocate an array to store the results
             var array = new T[count];
-            // Read the array in the remote process
-            for (var i = 0; i < count; i++)
+
+            // Read all the memory at once, much faster then reading each time individually
+            var bytes = ReadBytes(address, MarshalType<T>.Size*count, isRelative);
+
+            //If we check the type we can gain an additional boost of speed
+            //ofcourse if we wrote an unmanaged module and used that here itd go even faster then this.
+            if (typeof (T) != typeof (byte))
             {
-                array[i] = Read<T>(address + MarshalType<T>.Size * i, isRelative);
+                for (var i = 0; i < count; i++)
+                {
+                    array[i] = MarshalType<T>.ByteArrayToObject(bytes, MarshalType<T>.Size * i);
+                }
             }
+            else
+            {
+                //Just copy the bytes
+                Buffer.BlockCopy(bytes,0,array,0,count);
+            }
+            
+
             return array;
         }
         /// <summary>
