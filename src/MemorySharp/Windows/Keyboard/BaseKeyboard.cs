@@ -2,11 +2,10 @@
  * MemorySharp Library
  * http://www.binarysharp.com/
  *
- * Copyright (C) 2012-2014 Jämes Ménétrey (a.k.a. ZenLulz).
+ * Copyright (C) 2012-2016 Jämes Ménétrey (a.k.a. ZenLulz).
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Threading;

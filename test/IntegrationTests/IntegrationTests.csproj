@@ -82,9 +82,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\MemorySharp\MemorySharp.licenseheader">
-      <Link>MemorySharp.licenseheader</Link>
-    </None>
+    <None Include="MemorySharp.licenseheader" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

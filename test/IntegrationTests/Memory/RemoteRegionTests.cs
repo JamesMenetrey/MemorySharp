@@ -1,12 +1,11 @@
 ﻿/*
- * MemorySharp Library v1.0.0
+ * MemorySharp Library
  * http://www.binarysharp.com/
  *
- * Copyright (C) 2012-2013 Jämes Ménétrey (a.k.a. ZenLulz).
+ * Copyright (C) 2012-2016 Jämes Ménétrey (a.k.a. ZenLulz).
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
 */
-
 using System.Threading;
 using Binarysharp.MemoryManagement.Native;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
