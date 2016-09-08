@@ -2,6 +2,12 @@
 
 The log of changes made to MemorySharp Library.
 
+## V1.2
+
+Enhancements:
+
+- Rewrite Read<T> to have much much much better performance.
+
 ## V1.1.1 (05 September 2016)
 
 Bugfixes:
