@@ -2,11 +2,12 @@
 
 The log of changes made to MemorySharp Library.
 
-## V1.2
+## V1.2 (TBD)
 
 Enhancements:
 
-- Rewrite Read<T> to have much much much better performance.
+- Rewrite the read operations for arrays to have much better performance.
+- Rewrite the write operations for arrays to have much better performance.
 
 ## V1.1.1 (05 September 2016)
 

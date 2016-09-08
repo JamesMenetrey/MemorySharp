@@ -437,11 +437,17 @@ namespace Binarysharp.MemoryManagement
         /// <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
         public void Write<T>(IntPtr address, T[] array, bool isRelative = true)
         {
-            // Write the array in the remote process
+            // Allocate an array containing the values of the array converted into bytes
+            var valuesInBytes = new byte[MarshalType<T>.Size * array.Length];
+            
+            // Convert each value into its bytes representation
             for (var i = 0; i < array.Length; i++)
             {
-                Write(address + MarshalType<T>.Size * i, array[i], isRelative);
+                var offsetInArray = MarshalType<T>.Size * i;
+                Buffer.BlockCopy(MarshalType<T>.ObjectToByteArray(array[i]), 0, valuesInBytes, offsetInArray, MarshalType<T>.Size);
             }
+
+            WriteBytes(address, valuesInBytes, isRelative);
         }
         /// <summary>
         /// Writes an array of a specified type in the remote process.
