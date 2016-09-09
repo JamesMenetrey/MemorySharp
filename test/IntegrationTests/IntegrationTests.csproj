@@ -63,6 +63,7 @@
     <Compile Include="Modules\ModuleCoreTests.cs" />
     <Compile Include="Modules\ModuleFactoryTests.cs" />
     <Compile Include="Modules\RemoteModuleTests.cs" />
+    <Compile Include="Patterns\PatternScannerTest.cs" />
     <Compile Include="Resources.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Memory\MemoryFactoryTests.cs" />

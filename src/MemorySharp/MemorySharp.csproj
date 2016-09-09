@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Binarysharp.MemoryManagement</RootNamespace>
     <AssemblyName>MemorySharp</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -93,8 +94,15 @@
     <Compile Include="Memory\MemoryProtection.cs" />
     <Compile Include="Memory\RemoteRegion.cs" />
     <Compile Include="Memory\RemotePointer.cs" />
+    <Compile Include="Native\IManagedPeb.cs" />
+    <Compile Include="Patterns\DwordPattern.cs" />
+    <Compile Include="Patterns\IMemoryPattern.cs" />
     <Compile Include="Modules\InjectedModule.cs" />
-    <Compile Include="Native\ManagedPeb.cs" />
+    <Compile Include="Patterns\IPatternScanner.cs" />
+    <Compile Include="Patterns\MemoryPatternType.cs" />
+    <Compile Include="Patterns\PatternScanner.cs" />
+    <Compile Include="Patterns\PatternScanResult.cs" />
+    <Compile Include="Native\ManagedPeb32.cs" />
     <Compile Include="Native\ManagedTeb.cs" />
     <Compile Include="Modules\ModuleCore.cs" />
     <Compile Include="Modules\ModuleFactory.cs" />

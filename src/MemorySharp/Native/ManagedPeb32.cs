@@ -14,7 +14,7 @@ namespace Binarysharp.MemoryManagement.Native
     /// <summary>
     /// Class representing the Process Environment Block of a remote process.
     /// </summary>
-    public class ManagedPeb : RemotePointer
+    public class ManagedPeb32 : RemotePointer, IManagedPeb
     {
         #region Properties
         public byte InheritedAddressSpace
@@ -341,11 +341,11 @@ namespace Binarysharp.MemoryManagement.Native
 
         #region Constructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="ManagedPeb"/> class.
+        /// Initializes a new instance of the <see cref="ManagedPeb32"/> class.
         /// </summary>
         /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
         /// <param name="address">The location of the peb.</param>
-        internal ManagedPeb(MemorySharp memorySharp, IntPtr address) : base(memorySharp, address)
+        internal ManagedPeb32(MemorySharp memorySharp, IntPtr address) : base(memorySharp, address)
         {}
         #endregion
 

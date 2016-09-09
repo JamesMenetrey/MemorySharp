@@ -30,14 +30,20 @@ namespace Binarysharp.MemoryManagement
         /// <summary>
         /// Raises when the <see cref="MemorySharp"/> object is disposed.
         /// </summary>
-        public event EventHandler OnDispose;
+        public event EventHandler Disposing;
+
+
+        /// <summary>
+        /// Occurs when [process exited].
+        /// </summary>
+        public event EventHandler ProcessExited;
         #endregion
 
         #region Fields
         /// <summary>
         /// The factories embedded inside the library.
         /// </summary>
-        protected List<IFactory> Factories;
+        protected List<IFactory> Factories { get; set; } = new List<IFactory>();
         #endregion
 
         #region Properties
@@ -53,24 +59,50 @@ namespace Binarysharp.MemoryManagement
         /// </summary>
         public bool IsDebugged
         {
-            get { return Peb.BeingDebugged; }
-            set { Peb.BeingDebugged = value; }
+            get
+            {
+                if (Peb != null)
+                {
+                    return Peb.BeingDebugged;
+                }
+
+                var isDebuggerPresent = false;
+
+                if (!NativeMethods.CheckRemoteDebuggerPresent(Handle.DangerousGetHandle(), ref isDebuggerPresent))
+                {
+                    throw new Exception("Failed to check if remote process is already being debugged");
+                }
+
+                return isDebuggerPresent;
+            }
+            set
+            {
+                if (Peb != null)
+                {
+                    Peb.BeingDebugged = value;
+                }
+                else
+                {
+                    if (!NativeMethods.DebugActiveProcess(Pid))
+                    {
+                        throw new Exception("Failed to start debugging");
+                    }
+                }
+            }
         }
         #endregion
         #region IsRunning
         /// <summary>
         /// State if the process is running.
         /// </summary>
-        public bool IsRunning
-        {
-            get { return !Handle.IsInvalid && !Handle.IsClosed && !Native.HasExited; }
-        }
+        public bool IsRunning => !Handle.IsInvalid && !Handle.IsClosed && !Native.HasExited;
+
         #endregion
         #region Handle
         /// <summary>
         /// The remote process handle opened with all rights.
         /// </summary>
-        public SafeMemoryHandle Handle { get; private set; }
+        public SafeMemoryHandle Handle { get; }
         #endregion
         #region Memory
         /// <summary>
@@ -88,22 +120,21 @@ namespace Binarysharp.MemoryManagement
         /// <summary>
         /// Provide access to the opened process.
         /// </summary>
-        public Process Native { get; private set; }
+        public Process Native { get; }
         #endregion
         #region Peb
         /// <summary>
         /// The Process Environment Block of the process.
         /// </summary>
-        public ManagedPeb Peb { get; private set; }
+        public IManagedPeb Peb { get; }
+
         #endregion
         #region Pid
         /// <summary>
         /// Gets the unique identifier for the remote process.
         /// </summary>
-        public int Pid
-        {
-            get { return Native.Id; }
-        }
+        public int Pid => Native.Id;
+
         #endregion
         #region This
         /// <summary>
@@ -111,20 +142,16 @@ namespace Binarysharp.MemoryManagement
         /// </summary>
         /// <param name="moduleName">The name of module (not case sensitive).</param>
         /// <returns>A new instance of a <see cref="RemoteModule"/> class.</returns>
-        public RemoteModule this[string moduleName]
-        {
-            get { return Modules[moduleName]; }
-        }
+        public RemoteModule this[string moduleName] => Modules[moduleName];
+
         /// <summary>
         /// Gets a pointer to the specified address in the remote process.
         /// </summary>
         /// <param name="address">The address pointed.</param>
         /// <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
         /// <returns>A new instance of a <see cref="RemotePointer"/> class.</returns>
-        public RemotePointer this[IntPtr address, bool isRelative = true]
-        {
-            get { return new RemotePointer(this, isRelative ? MakeAbsolute(address) : address); }
-        }
+        public RemotePointer this[IntPtr address, bool isRelative = true] => new RemotePointer(this, isRelative ? MakeAbsolute(address) : address);
+
         #endregion
         #region Threads
         /// <summary>
@@ -149,12 +176,28 @@ namespace Binarysharp.MemoryManagement
         {
             // Save the reference of the process
             Native = process;
+
             // Open the process with all rights
             Handle = MemoryCore.OpenProcess(ProcessAccessFlags.AllAccess, process.Id);
-            // Initialize the PEB
-            Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
+
+            process.ErrorDataReceived += OutputNormalData;
+            process.OutputDataReceived += OutputErrorData;
+            process.EnableRaisingEvents = true;
+
+            process.Exited += OnProcessExited;
+
+            // Initialize the x32 (or x64) objects 
+            switch (IntPtr.Size)
+            {
+                case 4:
+                    Peb = new ManagedPeb32(this, ManagedPeb32.FindPeb(Handle));
+                    break;
+                case 8:
+                    Peb = null;
+                    break;
+            }
+
             // Create instances of the factories
-            Factories = new List<IFactory>();
             Factories.AddRange(
                 new IFactory[] {
                     Assembly = new AssemblyFactory(this),
@@ -188,11 +231,13 @@ namespace Binarysharp.MemoryManagement
         public virtual void Dispose()
         {
             // Raise the event OnDispose
-            if (OnDispose != null)
-                OnDispose(this, new EventArgs());
+            OnDisposing(EventArgs.Empty);
 
             // Dispose all factories
-            Factories.ForEach(factory => factory.Dispose());
+            foreach (var factory in Factories)
+            {
+                factory.Dispose();
+            }
 
             // Close the process handle
             Handle.Close();
@@ -239,7 +284,7 @@ namespace Binarysharp.MemoryManagement
         {
             // Check if the relative address is not greater than the main module size
             if (address.ToInt64() > Modules.MainModule.Size)
-                throw new ArgumentOutOfRangeException("address", "The relative address cannot be greater than the main module size.");
+                throw new ArgumentOutOfRangeException(nameof(address), "The relative address cannot be greater than the main module size.");
             // Compute the absolute address
             return new IntPtr(Modules.MainModule.BaseAddress.ToInt64() + address.ToInt64());
         }
@@ -254,17 +299,33 @@ namespace Binarysharp.MemoryManagement
         {
             // Check if the absolute address is smaller than the main module base address
             if (address.ToInt64() < Modules.MainModule.BaseAddress.ToInt64())
-                throw new ArgumentOutOfRangeException("address", "The absolute address cannot be smaller than the main module base address.");
+                throw new ArgumentOutOfRangeException(nameof(address), "The absolute address cannot be smaller than the main module base address.");
             // Compute the relative address
             return new IntPtr(address.ToInt64() - Modules.MainModule.BaseAddress.ToInt64());
         }
         #endregion
         #region Operator (override)
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator ==(MemorySharp left, MemorySharp right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator !=(MemorySharp left, MemorySharp right)
         {
             return !Equals(left, right);
@@ -524,5 +585,44 @@ namespace Binarysharp.MemoryManagement
         }
         #endregion
         #endregion
+
+        /// <summary>
+        /// Raises the <see cref="E:Disposing" /> event.
+        /// </summary>
+        /// <param name="eventArgs">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected virtual void OnDisposing(EventArgs eventArgs)
+        {
+            Disposing?.Invoke(this, eventArgs ?? EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Outputs the normal data.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="DataReceivedEventArgs"/> instance containing the event data.</param>
+        protected virtual void OutputNormalData(object sender, DataReceivedEventArgs e)
+        {
+            Trace.WriteLine(e.Data);
+        }
+
+        /// <summary>
+        /// Outputs the error data.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="DataReceivedEventArgs"/> instance containing the event data.</param>
+        protected virtual void OutputErrorData(object sender, DataReceivedEventArgs e)
+        {
+            Trace.TraceError(e.Data);
+        }
+
+        /// <summary>
+        /// Called when [process exited].
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected virtual void OnProcessExited(object sender, EventArgs args)
+        {
+            ProcessExited?.Invoke(sender, args);
+        }
     }
 }

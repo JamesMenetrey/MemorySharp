@@ -17,6 +17,26 @@ namespace Binarysharp.MemoryManagement.Native
     /// </summary>
     public static class NativeMethods
     {
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool DebugActiveProcess(int dwProcessId);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool DebugActiveProcessStop(int dwProcessId);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool DebugSetProcessKillOnExit(bool KillOnExit);
+
+        [DllImport("kernel32.dll")]
+        internal static extern bool ContinueDebugEvent(int dwProcessId, int dwThreadId, uint dwContinueStatus);
+
+        [DllImport("Kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool CheckRemoteDebuggerPresent(IntPtr hProcess, [MarshalAs(UnmanagedType.Bool)]ref bool isDebuggerPresent);
+
         #region CloseHandle
         /// <summary>
         /// Closes an open object handle.

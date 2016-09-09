@@ -24,7 +24,7 @@ namespace Binarysharp.MemoryManagement.Modules
         /// <summary>
         /// The dictionary containing all cached functions of the remote module.
         /// </summary>
-        internal readonly static IDictionary<Tuple<string, SafeMemoryHandle>, RemoteFunction> CachedFunctions = new Dictionary<Tuple<string, SafeMemoryHandle>, RemoteFunction>();
+        internal static readonly IDictionary<Tuple<string, SafeMemoryHandle>, RemoteFunction> CachedFunctions = new Dictionary<Tuple<string, SafeMemoryHandle>, RemoteFunction>();
         #endregion
 
         #region Properties
@@ -32,10 +32,8 @@ namespace Binarysharp.MemoryManagement.Modules
         /// <summary>
         /// State if this is the main module of the remote process.
         /// </summary>
-        public bool IsMainModule
-        {
-            get { return MemorySharp.Native.MainModule.BaseAddress == BaseAddress; }
-        }
+        public bool IsMainModule => MemorySharp.Native.MainModule.BaseAddress == BaseAddress;
+
         #endregion
         #region IsValid
         /// <summary>
@@ -53,34 +51,28 @@ namespace Binarysharp.MemoryManagement.Modules
         /// <summary>
         /// The name of the module.
         /// </summary>
-        public string Name
-        {
-            get { return Native.ModuleName; }
-        }
+        public string Name => Native.ModuleName;
+
         #endregion
         #region Native
         /// <summary>
         /// The native <see cref="ProcessModule"/> object corresponding to this module.
         /// </summary>
-        public ProcessModule Native { get; private set; }
+        public ProcessModule Native { get; }
         #endregion
         #region Path
         /// <summary>
         /// The full path of the module.
         /// </summary>
-        public string Path
-        {
-            get { return Native.FileName; }
-        }
+        public string Path => Native.FileName;
+
         #endregion
         #region Size
         /// <summary>
         /// The size of the module in the memory of the remote process.
         /// </summary>
-        public int Size
-        {
-            get { return Native.ModuleMemorySize; }
-        }
+        public int Size => Native.ModuleMemorySize;
+
         #endregion
         #region This
         /// <summary>
@@ -88,10 +80,8 @@ namespace Binarysharp.MemoryManagement.Modules
         /// </summary>
         /// <param name="functionName">The name of the function.</param>
         /// <returns>A new instance of a <see cref="RemoteFunction"/> class.</returns>
-        public RemoteFunction this[string functionName]
-        {
-            get { return FindFunction(functionName); }
-        }
+        public RemoteFunction this[string functionName] => FindFunction(functionName);
+
         #endregion
         #endregion
 
@@ -191,9 +181,18 @@ namespace Binarysharp.MemoryManagement.Modules
         /// </summary>
         public override string ToString()
         {
-            return string.Format("BaseAddress = 0x{0:X} Name = {1}", BaseAddress.ToInt64(), Name);
+            return $"BaseAddress = 0x{BaseAddress.ToInt64():X} Name = {Name}";
         }
         #endregion
+
+        /// <summary>
+        /// Gets the pattern scanner for this remote module instance.
+        /// </summary>
+        /// <returns></returns>
+        public Patterns.PatternScanner GetPatternScanner()
+        {
+            return new Patterns.PatternScanner(this);
+        }
         #endregion
     }
 }
