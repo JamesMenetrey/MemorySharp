@@ -7,6 +7,7 @@
  * See the file LICENSE for more information.
 */
 using System;
+using System.Diagnostics;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -31,6 +32,30 @@ namespace MemorySharpTests
 
             //Assert
             Assert.AreEqual(address.ToInt64() + offset.ToInt64(), absolute.ToInt64(), "Couldn't rebase the address correctly.");
+        }
+
+        /// <summary>
+        /// This test checks if the main module is properly cached in the library.
+        /// Speed issue reported here: http://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/433056-memorysharp-c-based-memory-editing-library-targeting-windows-applications-2.html#post2867864
+        /// </summary>
+        [TestMethod]
+        public void AssessSpeedMakeAbsolute100K()
+        {
+            // Arrange
+            var sharp = Resources.MemorySharp;
+            var offset = new IntPtr(0x400);
+            var watch = new Stopwatch();
+
+            // Act
+            watch.Start();
+            for (var i = 0; i < 100000; i++)
+            {
+                sharp.MakeAbsolute(offset);
+            }
+            watch.Stop();
+
+            // Assess
+            Assert.IsTrue(watch.Elapsed.TotalSeconds < 1, $"The method to make an absolute address is too slow ({watch.Elapsed.TotalSeconds}s).");
         }
 
         /// <summary>

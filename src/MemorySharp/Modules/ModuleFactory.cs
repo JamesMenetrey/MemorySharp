@@ -46,10 +46,7 @@ namespace Binarysharp.MemoryManagement.Modules
         /// <summary>
         /// Gets the main module for the remote process.
         /// </summary>
-        public RemoteModule MainModule
-        {
-            get { return FetchModule(MemorySharp.Native.MainModule); }
-        }
+        public RemoteModule MainModule { get; private set; }
         #endregion
         #region RemoteModules
         /// <summary>
@@ -96,6 +93,7 @@ namespace Binarysharp.MemoryManagement.Modules
         #endregion
 
         #region Constructor/Destructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ModuleFactory"/> class.
         /// </summary>
@@ -104,9 +102,14 @@ namespace Binarysharp.MemoryManagement.Modules
         {
             // Save the parameter
             MemorySharp = memorySharp;
+
             // Create a list containing all injected modules
             InternalInjectedModules = new List<InjectedModule>();
+
+            // Save a reference of the main module (the main module is required for a lot of operations, cached for speed reasons)
+            MainModule = FetchModule(MemorySharp.Native.MainModule);
         }
+
         /// <summary>
         /// Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
         /// </summary>
@@ -179,10 +182,12 @@ namespace Binarysharp.MemoryManagement.Modules
         {
             // Convert module name with lower chars
             moduleName = moduleName.ToLower();
+
             // Check if the module name has an extension
             if (!Path.HasExtension(moduleName))
+            {
                 moduleName += ".dll";
-
+            }
 
             // Fetch and return the module
             return new RemoteModule(MemorySharp, NativeModules.First(m => m.ModuleName.ToLower() == moduleName));

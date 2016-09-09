@@ -149,10 +149,13 @@ namespace Binarysharp.MemoryManagement
         {
             // Save the reference of the process
             Native = process;
+
             // Open the process with all rights
             Handle = MemoryCore.OpenProcess(ProcessAccessFlags.AllAccess, process.Id);
+
             // Initialize the PEB
             Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
+
             // Create instances of the factories
             Factories = new List<IFactory>();
             Factories.AddRange(
