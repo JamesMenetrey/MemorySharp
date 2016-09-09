@@ -134,6 +134,26 @@ namespace MemorySharpTests
         }
 
         /// <summary>
+        /// Ensure a string without a \0 delimiter can be read.
+        /// Issue reported here: https://github.com/ZenLulz/MemorySharp/issues/1 (4)
+        /// </summary>
+        [TestMethod]
+        public void WriteReadStringWithoutEndCharacter()
+        {
+            // Arrange
+            var sharp = Resources.MemorySharp;
+            const string value = "I love cookies";
+
+            // Act
+            sharp.WriteString(IntPtr.Zero, value);
+            var ret = sharp.ReadString(IntPtr.Zero, true, value.Length);
+
+            // Assert
+            Assert.AreEqual(value, ret, "Both strings are not equal.");
+            Resources.Restart();
+        }
+
+        /// <summary>
         /// Tests the property IsRunning.
         /// </summary>
         [TestMethod]

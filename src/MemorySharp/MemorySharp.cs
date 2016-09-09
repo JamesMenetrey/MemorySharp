@@ -367,10 +367,12 @@ namespace Binarysharp.MemoryManagement
         {
             // Read the string
             var data = encoding.GetString(ReadBytes(address, maxLength, isRelative));
+
             // Search the end of the string
-            var end = data.IndexOf('\0');
-            // Crop the string with this end
-            return data.Substring(0, end);
+            var endOfStringPosition = data.IndexOf('\0');
+
+            // Crop the string with this end if found, return the string otherwise
+            return endOfStringPosition == -1 ? data : data.Substring(0, endOfStringPosition);
         }
         /// <summary>
         /// Reads a string with a specified encoding in the remote process.
