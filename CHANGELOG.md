@@ -8,6 +8,7 @@ Enhancements:
 
 - Rewrite the read operations for arrays to have much better performance.
 - Rewrite the write operations for arrays to have much better performance.
+- Heavily improve the performance of write operations when a relative address is provided (the main module of the remote process is now cached).
 
 ## V1.1.1 (05 September 2016)
 
