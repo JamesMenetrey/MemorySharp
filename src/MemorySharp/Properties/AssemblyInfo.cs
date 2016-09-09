@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Binarysharp")]
 [assembly: AssemblyProduct("MemorySharp")]
-[assembly: AssemblyCopyright("Copyright © 2012-2014 ZenLulz")]
+[assembly: AssemblyCopyright("Copyright © 2012-2016 ZenLulz")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
