@@ -27,6 +27,7 @@ MemorySharp is divided into several parts. Here is list the all the features ava
  - Read and write primitive and complex data types
 
 - **Module interactions**
+ - Search for memory patterns
  - Enumerate all modules loaded
  - Find functions inside a module
  - Get the main module
@@ -248,6 +249,26 @@ var sharp = new MemorySharp(Process.GetCurrentProcess());
 
 var module = sharp.Modules.Inject(path);
 module.Eject();
+```
+
+### Perform pattern scans ###
+```csharp
+var process = System.Diagnostics.Process.GetProcessesByName("ProcessName").FirstOrDefault();
+var memorySharp = new Binarysharp.MemoryManagement.MemorySharp(process);
+var patternScanner = memorySharp.Modules.MainModule.GetPatternScanner();
+
+var scanResult =
+patternScanner.Find(new Binarysharp.MemoryManagement.Patterns.DwordPattern(
+                      "48 89 74 24 ?? 57 48 83 EC 20 48 8B 05 ?? ?? ?? ?? 48 8B F1 48"));
+
+if (!scanResult.ScanWasSuccessful)
+{
+    Console.WriteLine("Could not find pattern.");
+}
+
+Console.WriteLine(scanResult.Offset.ToString("X"));
+Console.WriteLine(scanResult.BaseAddress.ToString("X"));
+Console.WriteLine(scanResult.RebasedAddress.ToString("X"));
 ```
 
 ### Query/interact with windows ###
