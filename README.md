@@ -237,7 +237,7 @@ var address = IntPtr.Zero;
 var sharp = new MemorySharp(Process.GetCurrentProcess());
 
 // It's in[dexer]ception !
-sharp["user32"]["MessageBoxW"].Execute(CallingConventions.Stdcall,0, "Hey", "Title", 0);
+sharp["user32"]["MessageBoxA"].Execute(CallingConventions.Stdcall, 0, "Hey", "Title", 0);
 ```
 
 The traditional way is also available :
