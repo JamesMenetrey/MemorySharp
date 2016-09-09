@@ -226,7 +226,7 @@ var sharp = new MemorySharp(Process.GetCurrentProcess());
 
 using (var module = sharp.Modules.Inject(path))
 {
-    module.FindFunction("MessageBoxW").Execute(0, "Hey", "Title", 0);
+    module.FindFunction("YourFunctionName").Execute(parameters);
 }
 ```
 
@@ -237,7 +237,7 @@ var address = IntPtr.Zero;
 var sharp = new MemorySharp(Process.GetCurrentProcess());
 
 // It's in[dexer]ception !
-sharp["kernel32"]["MessageBoxW"].Execute(0, "Hey", "Title", 0);
+sharp["user32"]["MessageBoxW"].Execute(CallingConventions.Stdcall,0, "Hey", "Title", 0);
 ```
 
 The traditional way is also available :
