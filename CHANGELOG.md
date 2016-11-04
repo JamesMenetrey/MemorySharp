@@ -2,7 +2,7 @@
 
 The log of changes made to MemorySharp Library.
 
-## V1.2 (TBD)
+## V1.2 (21 September 2016)
 
 Enhancements:
 
