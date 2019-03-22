@@ -31,7 +31,7 @@ namespace MemorySharpTests.Assembly
                         {
                             "push 0",
                             "add esp, 4",
-                            "retn"
+                            "ret"
                         },
                     memory.BaseAddress);
 
@@ -58,7 +58,7 @@ namespace MemorySharpTests.Assembly
                 {
                     t.AddLine("push 0");
                     t.AddLine("add esp, 4");
-                    t.AddLine("retn");
+                    t.AddLine("ret");
                 }
                 // Assert
                 CollectionAssert.AreEqual(new byte[] { 0x6A, 00, 0x83, 0xC4, 04, 0xC3 }, sharp.Read<byte>(memory.BaseAddress, 6, false));
@@ -78,9 +78,8 @@ namespace MemorySharpTests.Assembly
             var sharp = Resources.MemorySharp;
             var asm = new[]
                 {
-                    "use32",
                     "mov eax, 66",
-                    "retn"
+                    "ret"
                 };
 
             // Act
@@ -104,9 +103,8 @@ namespace MemorySharpTests.Assembly
             // Act
             using (t = sharp.Assembly.BeginTransaction())
             {
-                t.AddLine("use32");
                 t.AddLine("mov eax, 66");
-                t.AddLine("retn");
+                t.AddLine("ret");
             }
 
             // Assert
@@ -128,9 +126,8 @@ namespace MemorySharpTests.Assembly
             {
                 using (var t = sharp.Assembly.BeginTransaction(memory.BaseAddress))
                 {
-                    t.AddLine("use32");
                     t.AddLine("mov eax, 66");
-                    t.AddLine("retn");
+                    t.AddLine("ret");
                 }
 
                 var ret = memory.Execute<int>();
