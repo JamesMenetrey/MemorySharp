@@ -122,7 +122,7 @@ namespace MemorySharpTests.Helpers
             var process = Resources.ProcessTest;
 
             // Act
-            var ret = ApplicationFinder.FromWindowTitle("new  1 - Notepad++").First();
+            var ret = ApplicationFinder.FromWindowTitle("new 1 - Notepad++").First();
 
             // Assert
             Assert.AreEqual(process.Id, ret.Id, "Both processes are not equal.");
