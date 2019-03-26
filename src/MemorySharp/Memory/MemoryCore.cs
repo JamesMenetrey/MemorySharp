@@ -88,10 +88,10 @@ namespace Binarysharp.MemoryManagement.Memory
 
         #region NtQueryInformationProcess
         /// <summary>
-        /// etrieves information about the specified process.
+        /// Retrieves information about the specified process.
         /// </summary>
         /// <param name="processHandle">A handle to the process to query.</param>
-        /// <returns>A <see cref="ProcessBasicInformation"/> structure containg process information.</returns>
+        /// <returns>A <see cref="ProcessBasicInformation"/> structure containing process information.</returns>
         public static ProcessBasicInformation NtQueryInformationProcess(SafeMemoryHandle processHandle)
         {
             // Check if the handle is valid
@@ -108,7 +108,7 @@ namespace Binarysharp.MemoryManagement.Memory
                 return info;
 
             // Else, couldn't get the process info, throws an exception
-            throw new ApplicationException(string.Format("Couldn't get the information from the process, error code '{0}'.", ret));
+            throw new ApplicationException($"Couldn't get the information from the process, error code '{ret}'.");
         }
         #endregion
 

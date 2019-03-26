@@ -283,7 +283,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// <summary>
         /// The exit status.
         /// </summary>
-        public uint ExitStatus;
+        public IntPtr ExitStatus;
         /// <summary>
         /// The base address of Process Environment Block.
         /// </summary>
@@ -291,26 +291,23 @@ namespace Binarysharp.MemoryManagement.Native
         /// <summary>
         /// The affinity mask.
         /// </summary>
-        public uint AffinityMask;
+        public IntPtr AffinityMask;
         /// <summary>
         /// The base priority.
         /// </summary>
-        public uint BasePriority;
+        public IntPtr BasePriority;
         /// <summary>
         /// The process id.
         /// </summary>
-        public int ProcessId;
+        public IntPtr ProcessId;
         /// <summary>
         /// The process id of the parent process.
         /// </summary>
-        public int InheritedFromUniqueProcessId;
+        public IntPtr InheritedFromUniqueProcessId;
         /// <summary>
         /// The size of this structure.
         /// </summary>
-        public int Size
-        {
-            get { return MarshalType<ProcessBasicInformation>.Size; }
-        }
+        public int Size => MarshalType<ProcessBasicInformation>.Size;
     }
     #endregion
 
