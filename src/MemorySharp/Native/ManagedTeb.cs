@@ -407,7 +407,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// <returns>A <see cref="IntPtr"/> pointer of the TEB.</returns>
         public static IntPtr FindTeb(SafeMemoryHandle threadHandle)
         {
-            return ThreadCore.NtQueryInformationThread(threadHandle).TebBaseAdress;
+            return ThreadCore.NtQueryInformationThread(threadHandle).TebBaseAddress;
         }
         #endregion
     }

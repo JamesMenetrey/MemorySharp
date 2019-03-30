@@ -12,6 +12,24 @@ using Binarysharp.MemoryManagement.Internals;
 
 namespace Binarysharp.MemoryManagement.Native
 {
+    #region ClientIdStruct
+    /// <summary>
+    /// A structure containing the process and thread identifier.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ClientIdStruct
+    {
+        /// <summary>
+        /// The process identifier.
+        /// </summary>
+        public IntPtr UniqueProcess;
+        /// <summary>
+        /// The thread identifier.
+        /// </summary>
+        public IntPtr UniqueThread;
+    }
+    #endregion
+
     #region FlashInfo
     /// <summary>
     /// Contains the flash status for a window and the number of times the system should flash the window.
@@ -319,34 +337,30 @@ namespace Binarysharp.MemoryManagement.Native
     public struct ThreadBasicInformation
     {
         /// <summary>
-        /// the exit status.
+        /// the exit status (NTSTATUS).
         /// </summary>
         public uint ExitStatus;
         /// <summary>
         /// The base address of Thread Environment Block.
         /// </summary>
-        public IntPtr TebBaseAdress;
+        public IntPtr TebBaseAddress;
         /// <summary>
-        /// The process id which owns the thread.
+        /// The process and thread identifiers.
         /// </summary>
-        public int ProcessId;
-        /// <summary>
-        /// The thread id.
-        /// </summary>
-        public int ThreadId;
+        public ClientIdStruct ClientIdStruct;
         /// <summary>
         /// The affinity mask.
         /// </summary>
-        public uint AffinityMask;
+        public IntPtr AffinityMask;
         /// <summary>
         /// The priority.
         /// </summary>
-        public uint Priority;
+        public int Priority;
         /// <summary>
         /// The base priority.
         /// </summary>
-        public uint BasePriority;
-    } 
+        public int BasePriority;
+    }
     #endregion
 
     #region ThreadContext

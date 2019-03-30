@@ -149,7 +149,7 @@ namespace Binarysharp.MemoryManagement.Threading
             ProcessThread nativeThread;
             do
             {
-                nativeThread = MemorySharp.Threads.NativeThreads.FirstOrDefault(t => t.Id == ret.ThreadId);
+                nativeThread = MemorySharp.Threads.NativeThreads.FirstOrDefault(t => t.Id == ret.ClientIdStruct.UniqueThread.ToInt64());
             } while (nativeThread == null);
 
             // Wrap the native thread in an object of the library
