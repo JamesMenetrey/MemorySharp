@@ -89,7 +89,7 @@ namespace Binarysharp.MemoryManagement.Memory
         /// <param name="protection">The protection of the memory to allocate.</param>
         /// <param name="mustBeDisposed">The allocated memory will be released when the finalizer collects the object.</param>
         /// <returns>A new instance of the <see cref="RemoteAllocation"/> class.</returns>
-        public RemoteAllocation Allocate(int size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, bool mustBeDisposed = true)
+        public RemoteAllocation Allocate(long size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, bool mustBeDisposed = true)
         {
             // Allocate a memory space
             var memory = new RemoteAllocation(MemorySharp, size, protection, mustBeDisposed);

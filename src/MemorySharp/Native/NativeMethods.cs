@@ -728,7 +728,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// If the function fails, the return value is NULL. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
         /// </returns>
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr VirtualAllocEx(SafeMemoryHandle hProcess, IntPtr lpAddress, int dwSize, MemoryAllocationFlags flAllocationType, MemoryProtectionFlags flProtect);
+        public static extern IntPtr VirtualAllocEx(SafeMemoryHandle hProcess, IntPtr lpAddress, IntPtr dwSize, MemoryAllocationFlags flAllocationType, MemoryProtectionFlags flProtect);
         #endregion
 
         #region VirtualFreeEx
@@ -792,7 +792,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
         /// </returns>
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool VirtualProtectEx(SafeMemoryHandle hProcess, IntPtr lpAddress, int dwSize, MemoryProtectionFlags flNewProtect, out MemoryProtectionFlags lpflOldProtect);
+        public static extern bool VirtualProtectEx(SafeMemoryHandle hProcess, IntPtr lpAddress, IntPtr dwSize, MemoryProtectionFlags flNewProtect, out MemoryProtectionFlags lpflOldProtect);
         #endregion
 
         #region VirtualQueryEx
@@ -817,7 +817,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
         /// </returns>
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern int VirtualQueryEx(SafeMemoryHandle hProcess, IntPtr lpAddress, out MemoryBasicInformation lpBuffer, int dwLength);
+        public static extern int VirtualQueryEx(SafeMemoryHandle hProcess, IntPtr lpAddress, out MemoryBasicInformation lpBuffer, IntPtr dwLength);
         #endregion
 
         #region WaitForSingleObject

@@ -40,7 +40,7 @@ namespace Binarysharp.MemoryManagement.Memory
         /// <param name="size">The size of the allocated memory.</param>
         /// <param name="protection">The protection of the allocated memory.</param>
         /// <param name="mustBeDisposed">The allocated memory will be released when the finalizer collects the object.</param>
-        internal RemoteAllocation(MemorySharp memorySharp, int size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, 
+        internal RemoteAllocation(MemorySharp memorySharp, long size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, 
                                  bool mustBeDisposed = true) 
             : base(memorySharp, MemoryCore.Allocate(memorySharp.Handle, size, protection))
         {

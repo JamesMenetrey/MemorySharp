@@ -49,12 +49,12 @@ namespace MemorySharpTests.Memory
             // Arrange
             var handle = MemoryCore.OpenProcess(ProcessAccessFlags.AllAccess, Resources.ProcessTest.Id);
             var expected = new byte[] { 0x90, 0x90, 0x90, 0x90, 0x90 };
-            var memory = new IntPtr(0x00400000);
+            var memory = Resources.ProcessTest.MainModule.BaseAddress;
 
             // Act
             try
             {
-                MemoryCore.ChangeProtection(handle, memory, 5, MemoryProtectionFlags.ExecuteReadWrite);
+                MemoryCore.ChangeProtection(handle, memory, new IntPtr(5), MemoryProtectionFlags.ExecuteReadWrite);
                 MemoryCore.WriteBytes(handle, memory, expected);
                 var actual = MemoryCore.ReadBytes(handle, memory, 5);
 

@@ -37,6 +37,10 @@ namespace Binarysharp.MemoryManagement.Internals
         /// </summary>
         public static int Size { get; private set; }
         /// <summary>
+        /// The size of the type as a <see cref="IntPtr"/>.
+        /// </summary>
+        public static IntPtr SizeAsPointer { get; private set; }
+        /// <summary>
         /// The typecode of the type.
         /// </summary>
         public static TypeCode TypeCode { get; private set; }
@@ -52,6 +56,7 @@ namespace Binarysharp.MemoryManagement.Internals
             IsIntPtr = typeof(T) == typeof(IntPtr);
             RealType = typeof(T);
             Size = TypeCode == TypeCode.Boolean ? 1 : Marshal.SizeOf(RealType);
+            SizeAsPointer = new IntPtr(Size);
             TypeCode = Type.GetTypeCode(RealType);
             // Check if the type can be stored in registers
             CanBeStoredInRegisters =

@@ -52,11 +52,12 @@ namespace Binarysharp.MemoryManagement.Memory
         /// <summary>
         /// The size of the altered memory.
         /// </summary>
-        public int Size { get; private set; }
+        public IntPtr Size { get; private set; }
         #endregion
         #endregion
 
         #region Constructor/Destructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryProtection"/> class.
         /// </summary>
@@ -65,7 +66,21 @@ namespace Binarysharp.MemoryManagement.Memory
         /// <param name="size">The size of the memory to change.</param>
         /// <param name="protection">The new protection to apply.</param>
         /// <param name="mustBeDisposed">The resource will be automatically disposed when the finalizer collects the object.</param>
-        public MemoryProtection(MemorySharp memorySharp, IntPtr baseAddress, int size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite,
+        public MemoryProtection(MemorySharp memorySharp, IntPtr baseAddress, long size,
+            MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite,
+            bool mustBeDisposed = true) : this(memorySharp, baseAddress, new IntPtr(size), protection, mustBeDisposed)
+
+        {
+        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemoryProtection"/> class.
+        /// </summary>
+        /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
+        /// <param name="baseAddress">The base address of the memory to change the protection.</param>
+        /// <param name="size">The size of the memory to change.</param>
+        /// <param name="protection">The new protection to apply.</param>
+        /// <param name="mustBeDisposed">The resource will be automatically disposed when the finalizer collects the object.</param>
+        public MemoryProtection(MemorySharp memorySharp, IntPtr baseAddress, IntPtr size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite,
                                 bool mustBeDisposed = true)
         {
             // Save the parameters

@@ -66,7 +66,7 @@ namespace Binarysharp.MemoryManagement.Memory
         /// <param name="protection">The new protection to apply.</param>
         /// <param name="mustBeDisposed">The resource will be automatically disposed when the finalizer collects the object.</param>
         /// <returns>A new instance of the <see cref="MemoryProtection"/> class.</returns>
-        public MemoryProtection ChangeProtection(int size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, bool mustBeDisposed = true)
+        public MemoryProtection ChangeProtection(IntPtr size, MemoryProtectionFlags protection = MemoryProtectionFlags.ExecuteReadWrite, bool mustBeDisposed = true)
         {
             return new MemoryProtection(MemorySharp, BaseAddress, size, protection, mustBeDisposed);
         }

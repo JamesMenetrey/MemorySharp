@@ -38,18 +38,19 @@ namespace MemorySharpTests.Memory
         /// Allocates 1MB of memory in the remote process.
         /// </summary>
         [TestMethod]
-        public void Allocate_Allocate1MBMemoryRegion()
+        public void Allocate_AllocateAndWriteMemoryRegion()
         {
             // Arrange
             var sharp = Resources.MemorySharp;
-            const int size = 1024*1024;
+            const int size = 1024 * 10;
 
             // Act
             var allocated = sharp.Memory.Allocate(size);
+            var regionSize = allocated.Information.RegionSize.ToInt64();
             // Fill the cave
             try
             {
-                for (var i = 0; i < allocated.Information.RegionSize; i++)
+                for (var i = 0; i < regionSize; i++)
                 {
                     allocated.Write(i, (byte)1);
                 }
@@ -60,7 +61,7 @@ namespace MemorySharpTests.Memory
             }
 
             // Assert
-            Assert.IsTrue(size - 4096 < allocated.Information.RegionSize && allocated.Information.RegionSize < size + 4096, "The allocated memory is wrong."); // 4096 = size of a page
+            Assert.IsTrue(size - 4096 < regionSize && regionSize < size + 4096, "The allocated memory is wrong."); // 4096 = size of a page
             Assert.AreEqual(MemoryStateFlags.Commit, allocated.Information.State, "The state of the memory is incorrect.");
             Assert.AreEqual(MemoryProtectionFlags.ExecuteReadWrite, allocated.Information.Protect, "The protection of the memory is incorrect.");
             allocated.Dispose();
@@ -81,7 +82,7 @@ namespace MemorySharpTests.Memory
             using (remoteAllocation = sharp.Memory.Allocate(1))
             {
                 Assert.IsTrue(remoteAllocation.IsValid, "The chunk of memory couldn't be allocated.");
-                Assert.AreEqual(4096, remoteAllocation.Information.RegionSize, "The chunk of memory doesn't have the default size of a page.");
+                Assert.AreEqual(new IntPtr(4096), remoteAllocation.Information.RegionSize, "The chunk of memory doesn't have the default size of a page.");
             }
 
             // Assert

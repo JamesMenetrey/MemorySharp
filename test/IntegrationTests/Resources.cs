@@ -79,7 +79,7 @@ namespace MemorySharpTests
         {
             get
             {
-                return Process.GetProcessesByName("notepad++").FirstOrDefault();
+                return Process.GetProcessesByName("notepad").FirstOrDefault();
             }
         }
 

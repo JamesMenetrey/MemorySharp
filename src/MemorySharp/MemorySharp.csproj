@@ -96,6 +96,7 @@
     <Compile Include="Assembly\CallingConvention\Enumerations.cs" />
     <Compile Include="Helpers\ApplicationFinder.cs" />
     <Compile Include="Helpers\HandleManipulator.cs" />
+    <Compile Include="Helpers\IntPtrExtensions.cs" />
     <Compile Include="Helpers\Randomizer.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\Singleton.cs" />
