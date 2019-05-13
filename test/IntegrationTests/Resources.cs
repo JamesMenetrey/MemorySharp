@@ -49,7 +49,7 @@ namespace MemorySharpTests
         {
             get
             {
-                return Path.Combine(Environment.SystemDirectory, "apphelp.dll");
+                return Path.Combine(Environment.CurrentDirectory, "LibForUnitTesting.dll");
             }
         }
 
@@ -79,7 +79,7 @@ namespace MemorySharpTests
         {
             get
             {
-                return Process.GetProcessesByName("notepad").FirstOrDefault();
+                return Process.GetProcessesByName("QtAppForUnitTesting").FirstOrDefault();
             }
         }
 

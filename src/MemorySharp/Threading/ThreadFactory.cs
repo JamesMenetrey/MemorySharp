@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Binarysharp.MemoryManagement.Helpers;
 using Binarysharp.MemoryManagement.Internals;
 using Binarysharp.MemoryManagement.Native;
 
@@ -118,7 +119,7 @@ namespace Binarysharp.MemoryManagement.Threading
             ProcessThread nativeThread;
             do
             {
-                nativeThread = MemorySharp.Threads.NativeThreads.FirstOrDefault(t => t.Id == ret.ThreadId);
+                nativeThread = MemorySharp.Threads.NativeThreads.FirstOrDefault(t => ret.ClientIdStruct.UniqueThread.IsEqual(t.Id));
             } while (nativeThread == null);
 
             // Find the managed object corresponding to this thread

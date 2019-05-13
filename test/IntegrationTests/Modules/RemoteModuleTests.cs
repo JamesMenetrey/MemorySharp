@@ -57,10 +57,10 @@ namespace MemorySharpTests.Modules
             var memorysharp = Resources.MemorySharp;
 
             // Act
-            var ret = memorysharp.Modules["SciLexer.dll"].FindFunction("Scintilla_DirectFunction");
+            var ret = memorysharp.Modules["Qt5Cored.dll"].FindFunction("z_zlibVersion");
 
             // Assert
-            Assert.IsTrue(ret != null && ret.Name == "Scintilla_DirectFunction");
+            Assert.IsTrue(ret != null && ret.Name == "z_zlibVersion");
         }
 
         /// <summary>

@@ -70,6 +70,8 @@ namespace MemorySharpTests.Modules
                 Assert.IsTrue(Resources.ProcessTest.Modules.Cast<ProcessModule>().Any(m => m.FileName.ToLower() == dllPath.ToLower()), "Cannot find the module using native API.");
             }
 
+            Assert.IsFalse(sharp.Native.Modules.Cast<ProcessModule>().Any(m => m.FileName == dllPath));
+
             Resources.EndTests(sharp);
         }
     }

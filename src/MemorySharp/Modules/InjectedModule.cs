@@ -81,13 +81,17 @@ namespace Binarysharp.MemoryManagement.Modules
         /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
         /// <param name="path">The path of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).</param>
         /// <returns>A new instance of the <see cref="InjectedModule"/>class.</returns>
+        /// <remarks>
+        /// The function GetExitCode is no longer used to get the base address of the injected library, because the returned value is
+        /// stored in 32-bit, which is not compatible with 64-bit architecture.
+        /// </remarks>
         internal static InjectedModule InternalInject(MemorySharp memorySharp, string path)
         {
             // Call LoadLibraryA remotely
             var thread = memorySharp.Threads.CreateAndJoin(memorySharp["kernel32"]["LoadLibraryA"].BaseAddress, path);
             // Get the inject module
             if (thread.GetExitCode<IntPtr>() != IntPtr.Zero)
-                return new InjectedModule(memorySharp, memorySharp.Modules.NativeModules.First(m => m.BaseAddress == thread.GetExitCode<IntPtr>()));
+                return new InjectedModule(memorySharp, memorySharp.Modules.NativeModules.First(m => m.FileName == path));
             return null;
         }
         #endregion
