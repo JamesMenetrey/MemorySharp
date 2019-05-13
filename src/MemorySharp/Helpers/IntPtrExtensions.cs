@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Binarysharp.MemoryManagement.Helpers
 {
     /// <summary>
-    /// Extensions methods for <see cref="IntPtr"/>. This avoids to cast the pointer type to a size
-    /// that is dependent to the architecture of the operating system architecture.
+    /// Extensions methods for <see cref="IntPtr"/>, in order to prevent to cast pointer to an architecture dependent size.
     /// </summary>
     public static class IntPtrExtensions
     {
@@ -14,9 +14,22 @@ namespace Binarysharp.MemoryManagement.Helpers
         /// <param name="pointer">The pointer where the offset is added.</param>
         /// <param name="offset">The offset to add.</param>
         /// <returns>The return value is a new instance of the class <see cref="IntPtr"/>.</returns>
-        public static IntPtr Add(this IntPtr pointer, IntPtr offset)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe IntPtr Add(this IntPtr pointer, IntPtr offset)
         {
-            return new IntPtr(pointer.ToValue() + offset.ToValue());
+            return new IntPtr((void*)(pointer.ToInt64() + offset.ToInt64()));
+        }
+
+        /// <summary>
+        /// Determines whether two given pointers are equal.
+        /// </summary>
+        /// <param name="pointer">The left pointer.</param>
+        /// <param name="value">The right pointer.</param>
+        /// <returns>The return value is <c>true</c> if the two pointers are equal; otherwise <c>false</c>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe bool IsEqual(this IntPtr pointer, int value)
+        {
+            return (void*)pointer == (void*)value;
         }
 
         /// <summary>
@@ -26,9 +39,10 @@ namespace Binarysharp.MemoryManagement.Helpers
         /// <param name="other">The second pointer to compare.</param>
         /// <returns>If the first pointer is greater or equal to the second one, the return value is <c>true</c>, 
         /// otherwise the return value is <c>false</c>.</returns>
-        public static bool IsGreaterOrEqualThan(this IntPtr pointer, IntPtr other)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe bool IsGreaterOrEqualThan(this IntPtr pointer, IntPtr other)
         {
-            return pointer.ToValue() >= other.ToValue();
+            return (void*)pointer >= (void*)other;
         }
 
         /// <summary>
@@ -38,9 +52,10 @@ namespace Binarysharp.MemoryManagement.Helpers
         /// <param name="other">The second pointer to compare.</param>
         /// <returns>If the first pointer is greater to the second one, the return value is <c>true</c>, 
         /// otherwise the return value is <c>false</c>.</returns>
-        public static bool IsGreaterThan(this IntPtr pointer, IntPtr other)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe bool IsGreaterThan(this IntPtr pointer, IntPtr other)
         {
-            return pointer.ToValue() > other.ToValue();
+            return (void*)pointer > (void*)other;
         }
 
         /// <summary>
@@ -50,23 +65,10 @@ namespace Binarysharp.MemoryManagement.Helpers
         /// <param name="other">The second pointer to compare.</param>
         /// <returns>If the first pointer is smaller to the second one, the return value is <c>true</c>, 
         /// otherwise the return value is <c>false</c>.</returns>
-        public static bool IsSmallerThan(this IntPtr pointer, IntPtr other)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe bool IsSmallerThan(this IntPtr pointer, IntPtr other)
         {
-            return !IsGreaterOrEqualThan(pointer, other);
-        }
-
-        /// <summary>
-        /// Converts a given pointer to a value that can be stored in a register of the architecture of the running process.
-        /// </summary>
-        /// <param name="pointer">The pointer to convert.</param>
-        /// <returns>The return value is a numeric value that can be stored in a processor register.</returns>
-        /// <remarks>
-        /// This method has been made private, so the user of the extensions methods don't have to consider to use the right
-        /// underlying type of the pointer.
-        /// </remarks>
-        private static long ToValue(this IntPtr pointer)
-        {
-            return pointer.ToInt64();
+            return (void*)pointer < (void*)other;
         }
     }
 }
