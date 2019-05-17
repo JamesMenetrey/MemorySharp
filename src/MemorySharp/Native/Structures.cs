@@ -370,6 +370,8 @@ namespace Binarysharp.MemoryManagement.Native
     [StructLayout(LayoutKind.Sequential)]
     public struct ThreadContext
     {
+        private const int MaximumSupportedExtension = 512;
+
         /// <summary>
         /// Determines which registers are returned or set when using <see cref="NativeMethods.GetThreadContext"/> or <see cref="NativeMethods.SetThreadContext"/>.
         /// 
@@ -380,6 +382,10 @@ namespace Binarysharp.MemoryManagement.Native
         /// 
         /// The context record is never used as an OUTPUT only parameter.
         /// </summary>
+        /// <remarks>
+        /// Referenced on https://docs.microsoft.com/en-us/windows/desktop/api/winnt/ns-winnt-_wow64_context.
+        /// Refer to the header file WinNT.h for definitions of this structure for each processor architecture.
+        /// </remarks>
         public ThreadContextFlags ContextFlags;
 
         /// <summary>
@@ -483,7 +489,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.ExtendedRegisters"/>.
         /// The format and contexts are processor specific.
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 512)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaximumSupportedExtension)]
         public byte[] ExtendedRegisters;
     }
     #endregion
