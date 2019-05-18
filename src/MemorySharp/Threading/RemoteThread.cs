@@ -19,9 +19,9 @@ using ThreadState = System.Diagnostics.ThreadState;
 namespace Binarysharp.MemoryManagement.Threading
 {
     /// <summary>
-    /// Class repesenting a thread in the remote process.
+    /// Class representing a thread in the remote process.
     /// </summary>
-    public class RemoteThread : IDisposable, IEquatable<RemoteThread>
+    public abstract class RemoteThread : IDisposable, IEquatable<RemoteThread>
     {
         #region Fields
         /// <summary>
@@ -39,64 +39,6 @@ namespace Binarysharp.MemoryManagement.Threading
         #endregion
 
         #region Properties
-        #region Context
-        /// <summary>
-        /// Gets or sets the full context of the thread.
-        /// If the thread is not already suspended, performs a <see cref="Suspend"/> and <see cref="Resume"/> call on the thread.
-        /// </summary>
-        public ThreadContext Context
-        {
-            get
-            {
-                // Check if the thread is alive
-                if (IsAlive)
-                {
-                    // Check if the thread is already suspended
-                    var isSuspended = IsSuspended;
-                    try
-                    {
-                        // Suspend the thread if it wasn't
-                        if (!isSuspended)
-                            Suspend();
-                        // Get the context
-                        return ThreadCore.GetThreadContext(Handle, ThreadContextFlags.All | ThreadContextFlags.FloatingPoint |
-                            ThreadContextFlags.DebugRegisters | ThreadContextFlags.ExtendedRegisters);
-
-                    }
-                    finally
-                    {
-                        // Resume the thread if it wasn't suspended
-                        if (!isSuspended)
-                            Resume();
-                    }
-                }
-                // The thread is closed, cannot set the context
-                throw new ThreadStateException(string.Format("Couldn't set the context of the thread #{0} because it is terminated.", Id));
-            }
-            set
-            {
-                // Check if the thread is alive
-                if (!IsAlive) return;
-
-                // Check if the thread is already suspended
-                var isSuspended = IsSuspended;
-                try
-                {
-                    // Suspend the thread if it wasn't
-                    if (!isSuspended)
-                        Suspend();
-                    // Set the context
-                    ThreadCore.SetThreadContext(Handle, value);
-                }
-                finally
-                {
-                    // Resume the thread if it wasn't suspended
-                    if (!isSuspended)
-                        Resume();
-                }
-            }
-        }
-        #endregion
         #region Handle
         /// <summary>
         /// The remote thread handle opened with all rights.
@@ -248,6 +190,43 @@ namespace Binarysharp.MemoryManagement.Threading
             return ReferenceEquals(this, other) || (Id == other.Id && MemorySharp.Equals(other.MemorySharp));
         }
         #endregion
+        #region GetContext        
+        /// <summary>
+        /// Gets the context of the thread into the given structure.
+        /// If the thread is not already suspended, performs a <see cref="Suspend" /> and <see cref="Resume" /> call on the thread.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to dump.
+        /// The type must be unmanaged, so it can be fixed while the native call is done.
+        /// The performance is increased if the structure is blittable, which is the case for the structures
+        /// provided with the library.</typeparam>
+        /// <param name="context">An instance of the structure where the context is loaded into.</param>
+        /// <exception cref="ThreadStateException">The context cannot be retrieved because the thread #{Id} is terminated.</exception>
+        /// <exception cref="Win32Exception">The context cannot be retrieved from the thread.</exception>
+        public void GetContext<TContext>(ref TContext context)
+            where TContext : unmanaged
+        {
+            // Check if the thread is alive
+            if (!IsAlive) throw new ThreadStateException($"The context cannot be retrieved because the thread #{Id} is terminated.");
+
+            // Check if the thread is already suspended
+            var isSuspended = IsSuspended;
+            try
+            {
+                // Suspend the thread if it wasn't
+                if (!isSuspended) Suspend();
+
+                // Get the context
+                ThreadCore.GetThreadContext(Handle, ref context);
+
+            }
+            finally
+            {
+                // Resume the thread if it wasn't suspended
+                if (!isSuspended) Resume();
+            }
+        }
+
+        #endregion
         #region GetExitCode
         /// <summary>
         /// Gets the termination status of the thread.
@@ -267,43 +246,6 @@ namespace Binarysharp.MemoryManagement.Threading
         public override int GetHashCode()
         {
             return Id.GetHashCode() ^ MemorySharp.GetHashCode();
-        }
-        #endregion
-        #region GetRealSegmentAddress
-        /// <summary>
-        /// Gets the linear address of a specified segment.
-        /// </summary>
-        /// <param name="segment">The segment to get.</param>
-        /// <returns>A <see cref="IntPtr"/> pointer corresponding to the linear address of the segment.</returns>
-        public IntPtr GetRealSegmentAddress(SegmentRegisters segment)
-        {
-            // Get a selector entry for the segment
-            LdtEntry entry;
-            switch (segment)
-            {
-                case SegmentRegisters.Cs:
-                    entry = ThreadCore.GetThreadSelectorEntry(Handle, Context.SegCs);
-                    break;
-                case SegmentRegisters.Ds:
-                    entry = ThreadCore.GetThreadSelectorEntry(Handle, Context.SegDs);
-                    break;
-                case SegmentRegisters.Es:
-                    entry = ThreadCore.GetThreadSelectorEntry(Handle, Context.SegEs);
-                    break;
-                case SegmentRegisters.Fs:
-                    entry = ThreadCore.GetThreadSelectorEntry(Handle, Context.SegFs);
-                    break;
-                case SegmentRegisters.Gs:
-                    entry = ThreadCore.GetThreadSelectorEntry(Handle, Context.SegGs);
-                    break;
-                case SegmentRegisters.Ss:
-                    entry = ThreadCore.GetThreadSelectorEntry(Handle, Context.SegSs);
-                    break;
-                default:
-                    throw new InvalidEnumArgumentException("segment");
-            }
-            // Compute the linear address
-            return new IntPtr(entry.BaseLow | (entry.BaseMid << 16) | (entry.BaseHi << 24));
         }
         #endregion
         #region Operator (override)
@@ -364,6 +306,41 @@ namespace Binarysharp.MemoryManagement.Threading
             // Start a task to clean the memory used by the parameter if we created the thread
             if(_parameter != null && !_parameterCleaner.IsCompleted)
                 _parameterCleaner.Start();
+        }
+        #endregion
+        #region SetContext        
+        /// <summary>
+        /// Sets the context of the thread.
+        /// If the thread is not already suspended, performs a <see cref="Suspend" /> and <see cref="Resume" /> call on the thread.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to set.
+        /// The type must be unmanaged, so it can be fixed while the native call is done.
+        /// The performance is increased if the structure is blittable, which is the case for the structures
+        /// provided with the library.</typeparam>
+        /// <param name="context">An instance of the structure where the context is set to.</param>
+        /// <exception cref="ThreadStateException">The context cannot be set because the thread #{Id} is terminated.</exception>
+        /// <exception cref="Win32Exception">The context cannot be set to the thread.</exception>
+        public void SetContext<TContext>(ref TContext context)
+            where TContext : unmanaged
+        {
+            // Check if the thread is alive
+            if (!IsAlive) throw new ThreadStateException($"The context cannot be set because the thread #{Id} is terminated.");
+
+            // Check if the thread is already suspended
+            var isSuspended = IsSuspended;
+            try
+            {
+                // Suspend the thread if it wasn't
+                if (!isSuspended) Suspend();
+
+                // Set the context
+                ThreadCore.SetThreadContext(Handle, ref context);
+            }
+            finally
+            {
+                // Resume the thread if it wasn't suspended
+                if (!isSuspended) Resume();
+            }
         }
         #endregion
         #region Suspend

@@ -8,6 +8,8 @@
 */
 using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Binarysharp.MemoryManagement.Helpers;
 using Binarysharp.MemoryManagement.Internals;
 using Binarysharp.MemoryManagement.Native;
@@ -77,25 +79,28 @@ namespace Binarysharp.MemoryManagement.Threading
         /// <summary>
         /// Retrieves the context of the specified thread.
         /// </summary>
+        /// <typeparam name="TContext">The type of the context to dump.
+        /// The type must be unmanaged, so it can be fixed while the native call is done.
+        /// The performance is increased if the structure is blittable, which is the case for the structures
+        /// provided with the library.</typeparam>
         /// <param name="threadHandle">A handle to the thread whose context is to be retrieved.</param>
-        /// <param name="contextFlags">Determines which registers are returned or set.</param>
-        /// <returns>A <see cref="ThreadContext"/> structure that receives the appropriate context of the specified thread.</returns>
-        public static ThreadContext GetThreadContext(SafeMemoryHandle threadHandle, ThreadContextFlags contextFlags = ThreadContextFlags.Full)
+        /// <param name="context">An instance of the structure where the context is loaded into.</param>
+        /// <exception cref="Win32Exception">The context cannot be retrieved from the thread.</exception>
+        public static unsafe void GetThreadContext<TContext>(SafeMemoryHandle threadHandle, ref TContext context)
+            where TContext : unmanaged
         {
             // Check if the handle is valid
             HandleManipulator.ValidateAsArgument(threadHandle, "threadHandle");
 
-            // Allocate a thread context structure
-            var context = new ThreadContext {ContextFlags = contextFlags};
-            
-            // Set the context flag
-
-            // Get the thread context
-            if (NativeMethods.GetThreadContext(threadHandle, ref context))
-                return context;
-
-            // Else couldn't get the thread context, throws an exception
-            throw new Win32Exception("Couldn't get the thread context.");
+            // Get the pointer of the structure and pin it, so the GC does not move it
+            fixed (void* contextPtr = &context)
+            {
+                // Get the thread context
+                if (NativeMethods.GetThreadContext(threadHandle, contextPtr) == 0)
+                {
+                    throw new Win32Exception("The context cannot be retrieved from the thread.");
+                }
+            }
         }
         #endregion
 
@@ -147,7 +152,7 @@ namespace Binarysharp.MemoryManagement.Threading
         /// Retrieves information about the specified thread.
         /// </summary>
         /// <param name="threadHandle">A handle to the thread to query.</param>
-        /// <returns>A <see cref="ThreadBasicInformation"/> structure containg thread information.</returns>
+        /// <returns>A <see cref="ThreadBasicInformation"/> structure containing thread information.</returns>
         public static ThreadBasicInformation NtQueryInformationThread(SafeMemoryHandle threadHandle)
         {
             // Check if the handle is valid
@@ -194,16 +199,28 @@ namespace Binarysharp.MemoryManagement.Threading
         /// <summary>
         /// Sets the context for the specified thread.
         /// </summary>
+        /// <typeparam name="TContext">The type of the context to set.
+        /// The type must be unmanaged, so it can be fixed while the native call is done.
+        /// The performance is increased if the structure is blittable, which is the case for the structures
+        /// provided with the library.</typeparam>
         /// <param name="threadHandle">A handle to the thread whose context is to be set.</param>
-        /// <param name="context">A pointer to a <see cref="ThreadContext"/> structure that contains the context to be set in the specified thread.</param>
-        public static void SetThreadContext(SafeMemoryHandle threadHandle, ThreadContext context)
+        /// <param name="context">A pointer to a <see cref="ThreadContext32" /> structure that contains the context to be set in the specified thread.</param>
+        /// <exception cref="Win32Exception">The context cannot be set to the thread.</exception>
+        public static unsafe void SetThreadContext<TContext>(SafeMemoryHandle threadHandle, ref TContext context)
+            where TContext : unmanaged
         {
             // Check if the handle is valid
             HandleManipulator.ValidateAsArgument(threadHandle, "threadHandle");
-            
-            // Set the thread context
-            if(!NativeMethods.SetThreadContext(threadHandle, ref context))
-                throw new Win32Exception("Couldn't set the thread context.");
+
+            // Get the pointer of the structure and pin it, so the GC does not move it
+            fixed (void* contextPtr = &context)
+            {
+                // Set the thread context
+                if (NativeMethods.SetThreadContext(threadHandle, contextPtr) == 0)
+                {
+                    throw new Win32Exception("The context cannot be set to the thread.");
+                }
+            }
         }
         #endregion
 

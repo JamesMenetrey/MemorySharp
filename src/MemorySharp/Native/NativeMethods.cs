@@ -186,18 +186,18 @@ namespace Binarysharp.MemoryManagement.Native
         /// WOW64: The handle must also have <see cref="ThreadAccessFlags.QueryInformation"/> access.
         /// </param>
         /// <param name="lpContext">
-        /// [Ref] A pointer to a <see cref="ThreadContext"/> structure that receives the appropriate context of the specified thread. 
+        /// A pointer to a thread context structure that receives the appropriate context of the specified thread. 
         /// The value of the ContextFlags member of this structure specifies which portions of a thread's context are retrieved. 
-        /// The <see cref="ThreadContext"/> structure is highly processor specific.
+        /// The structure structure is highly processor specific and because of that, that parameter is a pointer on the correct structure.
         /// Refer to the WinNT.h header file for processor-specific definitions of this structures and any alignment requirements.
         /// </param>
         /// <returns>
         /// If the function succeeds, the return value is nonzero.
         /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
+        /// The return type is initially a BOOL (of 4 bytes length), which corresponds to an integer to prevent any marshalling.
         /// </returns>
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetThreadContext(SafeMemoryHandle hThread, ref ThreadContext lpContext);
-
+        public static extern unsafe int GetThreadContext(SafeMemoryHandle hThread, void* lpContext);
         #endregion
 
         #region GetThreadSelectorEntry
@@ -603,18 +603,19 @@ namespace Binarysharp.MemoryManagement.Native
         /// A handle to the thread whose context is to be set. The handle must have the <see cref="ThreadAccessFlags.SetContext"/> access right to the thread. 
         /// For more information, see Thread Security and Access Rights.</param>
         /// <param name="lpContext">
-        /// A pointer to a <see cref="ThreadContext"/> structure that contains the context to be set in the specified thread. 
+        /// A pointer to a structure that contains the context to be set in the specified thread. 
         /// The value of the ContextFlags member of this structure specifies which portions of a thread's context to set. 
-        /// Some values in the <see cref="ThreadContext"/> structure that cannot be specified are silently set to the correct value. 
+        /// Some values in the structure that cannot be specified are silently set to the correct value. 
         /// This includes bits in the CPU status register that specify the privileged processor mode, global enabling bits in the debugging register, 
         /// and other states that must be controlled by the operating system.
         /// </param>
         /// <returns>
-        /// If the context was set, the return value is nonzero.
+        /// If the function succeeds, the return value is nonzero.
         /// If the function fails, the return value is zero. To get extended error information, call <see cref="Marshal.GetLastWin32Error"/>.
+        /// The return type is initially a BOOL (of 4 bytes length), which corresponds to an integer to prevent any marshalling.
         /// </returns>
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool SetThreadContext(SafeMemoryHandle hThread, [MarshalAs(UnmanagedType.Struct)] ref ThreadContext lpContext);
+        public static extern unsafe int SetThreadContext(SafeMemoryHandle hThread, void* lpContext);
 
         #endregion
 

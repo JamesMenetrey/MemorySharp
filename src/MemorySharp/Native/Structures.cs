@@ -363,14 +363,25 @@ namespace Binarysharp.MemoryManagement.Native
     }
     #endregion
 
-    #region ThreadContext
+    #region ThreadContext32
     /// <summary>
-    /// Represents a thread context.
+    /// Represents a thread context for 32-bit processes on Windows. Create a new instance using the constructor with the flags.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct ThreadContext
+    /// <remarks>
+    /// This structure is blittable and therefore, does not require any marshaling from Platform Invoke.
+    /// </remarks>
+    [StructLayout(LayoutKind.Explicit, Size = ThreadContext32Metadata.TotalSize)]
+    public unsafe struct ThreadContext32
     {
-        private const int MaximumSupportedExtension = 512;
+        //        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThreadContext32"/> struct.
+        /// </summary>
+        /// <param name="flags">Determines which registers are returned or set during the context query.</param>
+        public ThreadContext32(ThreadContextFlags flags) : this()
+        {
+            ContextFlags = flags;
+        }
 
         /// <summary>
         /// Determines which registers are returned or set when using <see cref="NativeMethods.GetThreadContext"/> or <see cref="NativeMethods.SetThreadContext"/>.
@@ -386,131 +397,142 @@ namespace Binarysharp.MemoryManagement.Native
         /// Referenced on https://docs.microsoft.com/en-us/windows/desktop/api/winnt/ns-winnt-_wow64_context.
         /// Refer to the header file WinNT.h for definitions of this structure for each processor architecture.
         /// </remarks>
-        public ThreadContextFlags ContextFlags;
+        [FieldOffset(ThreadContext32Metadata.Offsets.ContextFlags)] public ThreadContextFlags ContextFlags;
 
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.DebugRegisters"/>.
         /// </summary>
-        public uint Dr0;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Dr0)] public uint Dr0;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.DebugRegisters"/>.
         /// </summary>
-        public uint Dr1;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Dr1)] public uint Dr1;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.DebugRegisters"/>.
         /// </summary>
-        public uint Dr2;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Dr2)] public uint Dr2;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.DebugRegisters"/>.
         /// </summary>
-        public uint Dr3;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Dr3)] public uint Dr3;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.DebugRegisters"/>.
         /// </summary>
-        public uint Dr6;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Dr6)] public uint Dr6;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.DebugRegisters"/>.
         /// </summary>
-        public uint Dr7;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Dr7)] public uint Dr7;
+
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.FloatingPoint"/>.
         /// </summary>
-        [MarshalAs(UnmanagedType.Struct)]
-        public FloatingSaveArea FloatingSave;
+        [FieldOffset(ThreadContext32Metadata.Offsets.ControlWord)] public uint ControlWord;
+        /// <summary>
+        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.FloatingPoint"/>.
+        /// </summary>
+        [FieldOffset(ThreadContext32Metadata.Offsets.StatusWord)] public uint StatusWord;
+        /// <summary>
+        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.FloatingPoint"/>.
+        /// </summary>
+        [FieldOffset(ThreadContext32Metadata.Offsets.TagWord)] public uint TagWord;
+        /// <summary>
+        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.FloatingPoint"/>.
+        /// </summary>
+        [FieldOffset(ThreadContext32Metadata.Offsets.ErrorOffset)] public uint ErrorOffset;
+        /// <summary>
+        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.FloatingPoint"/>.
+        /// </summary>
+        [FieldOffset(ThreadContext32Metadata.Offsets.ErrorSelector)] public uint ErrorSelector;
+        /// <summary>
+        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.FloatingPoint"/>.
+        /// </summary>
+        [FieldOffset(ThreadContext32Metadata.Offsets.DataOffset)] public uint DataOffset;
+        /// <summary>
+        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.FloatingPoint"/>.
+        /// </summary>
+        [FieldOffset(ThreadContext32Metadata.Offsets.DataSelector)] public uint DataSelector;
+        /// <summary>
+        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.FloatingPoint"/>.
+        /// </summary>
+        [FieldOffset(ThreadContext32Metadata.Offsets.RegisterArea)] public fixed byte RegisterArea[ThreadContext32Metadata.Sizes.RegisterAreaSize];
 
         /// <summary>
-        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Segments"/>.
+        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.FloatingPoint"/>.
         /// </summary>
-        public uint SegGs;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Cr0NpxState)] public uint Cr0NpxState;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Segments"/>.
         /// </summary>
-        public uint SegFs;
+        [FieldOffset(ThreadContext32Metadata.Offsets.SegGs)] public uint SegGs;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Segments"/>.
         /// </summary>
-        public uint SegEs;
+        [FieldOffset(ThreadContext32Metadata.Offsets.SegFs)] public uint SegFs;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Segments"/>.
         /// </summary>
-        public uint SegDs;
+        [FieldOffset(ThreadContext32Metadata.Offsets.SegEs)] public uint SegEs;
+        /// <summary>
+        /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Segments"/>.
+        /// </summary>
+        [FieldOffset(ThreadContext32Metadata.Offsets.SegDs)] public uint SegDs;
 
         /// <summary>
         /// This register is specified/returned if the ContextFlags word contains the flag <see cref="ThreadContextFlags.Integer"/>.
         /// </summary>
-        public uint Edi;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Edi)] public uint Edi;
         /// <summary>
         /// This register is specified/returned if the ContextFlags word contains the flag <see cref="ThreadContextFlags.Integer"/>.
         /// </summary>
-        public uint Esi;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Esi)] public uint Esi;
         /// <summary>
         /// This register is specified/returned if the ContextFlags word contains the flag <see cref="ThreadContextFlags.Integer"/>.
         /// </summary>
-        public uint Ebx;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Ebx)] public uint Ebx;
         /// <summary>
         /// This register is specified/returned if the ContextFlags word contains the flag <see cref="ThreadContextFlags.Integer"/>.
         /// </summary>
-        public uint Edx;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Edx)] public uint Edx;
         /// <summary>
         /// This register is specified/returned if the ContextFlags word contains the flag <see cref="ThreadContextFlags.Integer"/>.
         /// </summary>
-        public uint Ecx;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Ecx)] public uint Ecx;
         /// <summary>
         /// This register is specified/returned if the ContextFlags word contains the flag <see cref="ThreadContextFlags.Integer"/>.
         /// </summary>
-        public uint Eax;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Eax)] public uint Eax;
 
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Control"/>.
         /// </summary>
-        public uint Ebp;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Ebp)] public uint Ebp;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Control"/>.
         /// </summary>
-        public uint Eip;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Eip)] public uint Eip;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Control"/>.
         /// </summary>
-        public uint SegCs;
+        [FieldOffset(ThreadContext32Metadata.Offsets.SegCs)] public uint SegCs;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Control"/>.
         /// </summary>
-        public uint EFlags;
+        [FieldOffset(ThreadContext32Metadata.Offsets.EFlags)] public uint EFlags;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Control"/>.
         /// </summary>
-        public uint Esp;
+        [FieldOffset(ThreadContext32Metadata.Offsets.Esp)] public uint Esp;
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.Control"/>.
         /// </summary>
-        public uint SegSs;
+        [FieldOffset(ThreadContext32Metadata.Offsets.SegSs)] public uint SegSs;
 
         /// <summary>
         /// This is specified/returned if <see cref="ContextFlags"/> contains the flag <see cref="ThreadContextFlags.ExtendedRegisters"/>.
         /// The format and contexts are processor specific.
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaximumSupportedExtension)]
-        public byte[] ExtendedRegisters;
-    }
-    #endregion
-
-    #region FloatingSaveArea
-    /// <summary>
-    /// Returned if <see cref="ThreadContextFlags.FloatingPoint"/> flag is set.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    public struct FloatingSaveArea
-    {
-        public uint ControlWord;
-        public uint StatusWord;
-        public uint TagWord;
-        public uint ErrorOffset;
-        public uint ErrorSelector;
-        public uint DataOffset;
-        public uint DataSelector;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 80)]
-        public byte[] RegisterArea;
-        public uint Cr0NpxState;
+        [FieldOffset(ThreadContext32Metadata.Offsets.ExtendedRegisters)] public fixed byte ExtendedRegisters[ThreadContext32Metadata.Sizes.ExtendedRegistersSize];
     }
     #endregion
 

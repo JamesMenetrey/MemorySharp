@@ -69,7 +69,12 @@ namespace MemorySharpTests.Threading
             var sharp = Resources.MemorySharp;
 
             // Act
-            var context = sharp.Threads.MainThread.Context;
+#if x86
+            var context = new ThreadContext32(ThreadContextFlags.All);
+            sharp.Threads.MainThread.GetContext(ref context);
+#elif x64
+            throw new NotImplementedException();
+#endif
 
             // Assert
             Assert.AreNotEqual(0, context.Eip);
@@ -85,8 +90,16 @@ namespace MemorySharpTests.Threading
             var sharp = Resources.MemorySharp;
 
             // Act
+#if x86
+            var context = new ThreadContext32(ThreadContextFlags.All);
+            sharp.Threads.MainThread.GetContext(ref context);
+#elif x64
+            var context = new ThreadContext32(ThreadContextFlags.All);
+            sharp.Threads.MainThread.GetContext(ref context);
+#endif
+
             var thread = sharp.Threads.MainThread;
-            var fs = thread.GetRealSegmentAddress(SegmentRegisters.Fs);
+            var fs = ((WindowsRemoteThread)thread).GetRealSegmentAddress(SegmentRegisters.Fs, ref context);
 
             // Assert.
             Assert.AreNotEqual(IntPtr.Zero, fs, "The FS segment is null.");
@@ -118,32 +131,49 @@ namespace MemorySharpTests.Threading
         }
 
         /// <summary>
-        /// [No Assert] Changes the EIP register.
+        /// Changes the EIP register.
         /// </summary>
         [TestMethod]
         public void SuspendResumeSetContextEip()
         {
             // Arrange
             var sharp = Resources.MemorySharp;
-            var sharp2 = Resources.MemorySharp;
             var thread = sharp.Threads.MainThread;
-            const uint value = 0x666;
+            const uint newEip = 0x666;
 
             // Act
             using (thread.Suspend())
             {
                 // Get the original value
-                var original = thread.Context;
-                // Set the value
-                var context = thread.Context;
-                context.Eip = value;
-                sharp.Threads.MainThread.Context = context;
+#if x86
+                var context = new ThreadContext32(ThreadContextFlags.All);
+                sharp.Threads.MainThread.GetContext(ref context);
+                var originalEip = context.Eip;
+
+                //Set the value
+                context.Eip = newEip;
+#elif x64
+                var context = new ThreadContext32(ThreadContextFlags.All);
+                sharp.Threads.MainThread.GetContext(ref context);
+#endif
+                thread.SetContext(ref context);
+
+                // Get the context again to validate the change
+                thread.GetContext(ref context);
 
                 // Assert
-                Assert.AreEqual(sharp2.Threads.MainThread.Context.Eip, thread.Context.Eip, "The values are not equal.");
+#if x86
+                Assert.AreEqual(newEip, context.Eip, "The values are not equal.");
+#elif x64
+                throw new NotImplementedException();
+#endif
 
-                // Set the origial value back
-                thread.Context = original;
+                // Set the original value back
+#if x86
+                context.Eip = originalEip;
+#elif x64
+#endif
+                thread.SetContext(ref context);
             }
         }
 

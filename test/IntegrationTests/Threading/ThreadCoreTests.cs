@@ -10,6 +10,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Binarysharp.MemoryManagement.Helpers;
@@ -99,6 +100,7 @@ namespace MemorySharpTests.Threading
         {
             // Arrange
             var handle = ThreadCore.OpenThread(ThreadAccessFlags.AllAccess, Resources.ProcessTest.Threads[0].Id);
+            const uint eaxToTest = 0x666;
 
             // Act
             try
@@ -106,22 +108,27 @@ namespace MemorySharpTests.Threading
                 ThreadCore.SuspendThread(handle);
 
                 // Get the context
-                var original = ThreadCore.GetThreadContext(handle);
-                var modified = original;
+                ThreadContext32 context = new ThreadContext32(ThreadContextFlags.All);
+                ThreadCore.GetThreadContext(handle, ref context);
 
-                Assert.AreNotEqual(0, modified.Eip);
+                Assert.AreNotEqual(0u, context.Eip);
 
                 // Set a value to eax
-                modified.Eax = 0x666;
-                // Set the context
-                ThreadCore.SetThreadContext(handle, modified);
-                // Re-get the context to check if it's all right
-                modified = ThreadCore.GetThreadContext(handle);
+                var originalEax = context.Eax;
+                context.Eax = eaxToTest;
 
-                Assert.AreEqual((uint)0x666, modified.Eax);
+                // Set the context
+                ThreadCore.SetThreadContext(handle, ref context);
+
+                // Re-get the context to check if it's all right
+                context.Eax = 0;
+                ThreadCore.GetThreadContext(handle, ref context);
+
+                Assert.AreEqual(eaxToTest, context.Eax);
 
                 // Restore the original context
-                ThreadCore.SetThreadContext(handle, original);
+                context.Eax = originalEax;
+                ThreadCore.SetThreadContext(handle, ref context);
             }
             finally
             {

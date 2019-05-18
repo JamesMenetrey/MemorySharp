@@ -1062,7 +1062,7 @@ namespace Binarysharp.MemoryManagement.Native
     /// Determines which registers are returned or set when using <see cref="NativeMethods.GetThreadContext"/> or <see cref="NativeMethods.SetThreadContext"/>.
     /// </summary>
     [Flags]
-    public enum ThreadContextFlags
+    public enum ThreadContextFlags : uint
     {
         /// <summary>
         /// The Intel 80386 microprocessor, also known as the i386.

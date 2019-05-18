@@ -110,6 +110,7 @@
     <Compile Include="Internals\Manager.cs" />
     <Compile Include="Internals\MarshalType.cs" />
     <Compile Include="Internals\MarshalValue.cs" />
+    <Compile Include="Internals\StructMetadata.cs" />
     <Compile Include="MemorySharp.cs" />
     <Compile Include="Memory\InstructionSet.cs" />
     <Compile Include="Memory\RemoteAllocation.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Threading\RemoteThread.cs" />
     <Compile Include="Threading\ThreadCore.cs" />
     <Compile Include="Threading\ThreadFactory.cs" />
+    <Compile Include="Threading\WindowsRemoteThread.cs" />
     <Compile Include="Windows\Keyboard\BaseKeyboard.cs" />
     <Compile Include="Windows\Keyboard\MessageKeyboard.cs" />
     <Compile Include="Windows\Mouse\BaseMouse.cs" />
