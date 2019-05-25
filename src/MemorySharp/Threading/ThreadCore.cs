@@ -96,7 +96,7 @@ namespace Binarysharp.MemoryManagement.Threading
             fixed (void* contextPtr = &context)
             {
                 // Get the thread context
-                if (NativeMethods.GetThreadContext(threadHandle, contextPtr) == 0)
+                if (NativeMethods.GetThreadContext(threadHandle, contextPtr) == (void*)0)
                 {
                     throw new Win32Exception("The context cannot be retrieved from the thread.");
                 }

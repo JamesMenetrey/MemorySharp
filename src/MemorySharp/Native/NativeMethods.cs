@@ -197,7 +197,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// The return type is initially a BOOL (of 4 bytes length), which corresponds to an integer to prevent any marshalling.
         /// </returns>
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern unsafe int GetThreadContext(SafeMemoryHandle hThread, void* lpContext);
+        public static extern unsafe void* GetThreadContext(SafeMemoryHandle hThread, void* lpContext);
         #endregion
 
         #region GetThreadSelectorEntry
