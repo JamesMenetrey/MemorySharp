@@ -30,5 +30,18 @@ namespace MemorySharpTests.Native
                 Assert.Fail("The structure is no longer blittable, which causes performance penalties when marshaled.");
             }
         }
+
+        [TestMethod]
+        public void EnsureThreadContext64IsBlittable()
+        {
+            try
+            {
+                GCHandle.Alloc(new ThreadContext64(), GCHandleType.Pinned);
+            }
+            catch (ArgumentException e) when (IsBlittableRelated(e))
+            {
+                Assert.Fail("The structure is no longer blittable, which causes performance penalties when marshaled.");
+            }
+        }
     }
 }

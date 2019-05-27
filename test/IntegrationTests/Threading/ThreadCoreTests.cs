@@ -10,7 +10,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Binarysharp.MemoryManagement.Helpers;
@@ -100,12 +99,14 @@ namespace MemorySharpTests.Threading
         {
             // Arrange
             var handle = ThreadCore.OpenThread(ThreadAccessFlags.AllAccess, Resources.ProcessTest.Threads[0].Id);
-            const uint eaxToTest = 0x666;
 
             // Act
             try
             {
                 ThreadCore.SuspendThread(handle);
+
+#if x86
+                const uint eaxToTest = 0x666;
 
                 // Get the context
                 ThreadContext32 context = new ThreadContext32(ThreadContextFlags.All);
@@ -129,6 +130,35 @@ namespace MemorySharpTests.Threading
                 // Restore the original context
                 context.Eax = originalEax;
                 ThreadCore.SetThreadContext(handle, ref context);
+#elif x64
+                const ulong raxToTest = 0x666;
+                // The data structure must be aligned to 16 bytes
+                StackAllocAlignment.Allocate(16, (ref ThreadContext64 context) =>
+                {
+                    // Get the context
+                    context.ContextFlags = ThreadContextFlags.All;
+                    ThreadCore.GetThreadContext(handle, ref context);
+
+                    Assert.AreNotEqual(0ul, context.Rip);
+
+                    // Set the value to rax
+                    var originalRax = context.Rax;
+                    context.Rax = raxToTest;
+
+                    // Set the context
+                    ThreadCore.SetThreadContext(handle, ref context);
+
+                    // Re-get the context to check if it's all right
+                    context.Rax = 0;
+                    ThreadCore.GetThreadContext(handle, ref context);
+
+                    Assert.AreEqual(raxToTest, context.Rax);
+
+                    // Restore the original context
+                    context.Rax = originalRax;
+                    ThreadCore.SetThreadContext(handle, ref context);
+                });
+#endif
             }
             finally
             {

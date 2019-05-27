@@ -102,6 +102,7 @@
     <Compile Include="Helpers\Randomizer.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\Singleton.cs" />
+    <Compile Include="Helpers\StackAllocAlignment.cs" />
     <Compile Include="Internals\IApplicableElement.cs" />
     <Compile Include="Internals\IDisposableState.cs" />
     <Compile Include="Internals\IFactory.cs" />
