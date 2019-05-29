@@ -153,7 +153,7 @@ namespace Binarysharp.MemoryManagement.Threading
         /// </summary>
         /// <param name="threadHandle">A handle to the thread to query.</param>
         /// <returns>A <see cref="ThreadBasicInformation"/> structure containing thread information.</returns>
-        public static ThreadBasicInformation NtQueryInformationThread(SafeMemoryHandle threadHandle)
+        public static unsafe ThreadBasicInformation NtQueryInformationThread(SafeMemoryHandle threadHandle)
         {
             // Check if the handle is valid
             HandleManipulator.ValidateAsArgument(threadHandle, "threadHandle");
@@ -162,14 +162,47 @@ namespace Binarysharp.MemoryManagement.Threading
             var info = new ThreadBasicInformation();
 
             // Get the thread info
-            var ret = NativeMethods.NtQueryInformationThread(threadHandle, 0, ref info, MarshalType<ThreadBasicInformation>.Size, IntPtr.Zero);
+            void* infoPtr = &info; // info is already fixed
+            var returnLength = IntPtr.Zero;
+            var ret = NativeMethods.NtQueryInformationThread(threadHandle,
+                ThreadInformationClass.ThreadBasicInformation, infoPtr, MarshalType<ThreadBasicInformation>.SizeAsPointer,
+                ref returnLength);
 
             // If the function succeeded
             if (ret == 0)
+            {
                 return info;
+            }
 
             // Else, couldn't get the thread info, throws an exception
-            throw new ApplicationException(string.Format("Couldn't get the information from the thread, error code '{0}'.", ret));
+            throw new ApplicationException($"The thread information cannot be queried; error code '{ret}'.");
+        }
+
+        /// <summary>
+        /// Retrieves information about the specified thread.
+        /// </summary>
+        /// <param name="threadHandle">A handle to the thread to query.</param>
+        /// <param name="threadInformationClass">The class of the thread to retrieve.</param>
+        /// <returns>The requested data as an unsigned integer.</returns>
+        public static unsafe ulong NtQueryInformationThread(SafeMemoryHandle threadHandle, ThreadInformationClass threadInformationClass)
+        {
+            // Check if the handle is valid
+            HandleManipulator.ValidateAsArgument(threadHandle, "threadHandle");
+
+            // Get the thread info
+            ulong info = 0;
+            var returnLength = IntPtr.Zero;
+            var ret = NativeMethods.NtQueryInformationThread(threadHandle,
+                ThreadInformationClass.ThreadBasicInformation, &info, new IntPtr(IntPtr.Size), ref returnLength);
+
+            // If the function succeeded
+            if (ret == 0)
+            {
+                return info;
+            }
+
+            // Else, couldn't get the thread info, throws an exception
+            throw new ApplicationException($"The thread information cannot be queried; error code '{ret}'.");
         }
         #endregion
 

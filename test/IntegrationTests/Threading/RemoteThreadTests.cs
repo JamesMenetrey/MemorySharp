@@ -7,10 +7,9 @@
  * See the file LICENSE for more information.
 */
 using System;
-using System.Linq;
 using System.Threading;
-using Binarysharp.MemoryManagement.Helpers;
 using Binarysharp.MemoryManagement.Native;
+using Binarysharp.MemoryManagement.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MemorySharpTests.Threading
@@ -106,34 +105,26 @@ namespace MemorySharpTests.Threading
             var thread = sharp.Threads.MainThread;
             var fs = ((WindowsRemoteThread)thread).GetRealSegmentAddress(SegmentRegisters.Fs, ref context);
 
-            // Assert.
+            // Assert
             Assert.AreNotEqual(IntPtr.Zero, fs, "The FS segment is null.");
 #endif
         }
 
         /// <summary>
-        /// Copies the TlsSlots from a thread to the main one by erasing them (YEAH, it's a bit evil :D).
+        /// Validates that at least one information retrieved from the teb is valid.
         /// </summary>
         [TestMethod]
-        public void TebTlsSlots_CopyTlsFromAnotherThread()
+        public void TebTreadId_ShouldCorrespondToTheCorrectThreadId()
         {
             // Arrange
             var sharp = Resources.MemorySharp;
-            var t1 = sharp.Threads.MainThread;
-            var t2 = sharp.Threads.RemoteThreads.Last();
-            var values = new[] { new IntPtr(0x1123344), new IntPtr(0x55667788) };
+            var thread = (WindowsRemoteThread)sharp.Threads.MainThread;
 
             // Act
-            // Write identifiable data
-            t2.Teb.TlsSlots = values;
-            // Erase main tls :O
-            t1.Teb.TlsSlots = t2.Teb.TlsSlots;
+            var tid = thread.Teb.ThreadId;
 
             // Assert
-            Assert.AreEqual(values[0], t1.Teb.TlsSlots[0], "Couldn't read/write TLS.");
-            Assert.AreEqual(values[1], t1.Teb.TlsSlots[1], "Couldn't read/write TLS (2).");
-
-            Resources.Restart();
+            Assert.AreEqual(thread.Id, tid);
         }
 
         /// <summary>

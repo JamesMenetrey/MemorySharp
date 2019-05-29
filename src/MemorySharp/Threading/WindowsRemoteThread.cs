@@ -11,6 +11,15 @@ namespace Binarysharp.MemoryManagement.Threading
     /// </summary>
     public class WindowsRemoteThread : RemoteThread
     {
+        #region Properties
+        #region Teb        
+        /// <summary>
+        /// Gets the thread environment block.
+        /// </summary>
+        public ManagedTeb Teb => new ManagedTeb(MemorySharp, ManagedTeb.FindTeb(Handle));
+        #endregion
+        #endregion
+
         #region Constructor/Destructor
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteThread" /> class.

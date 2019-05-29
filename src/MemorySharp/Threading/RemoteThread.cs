@@ -105,12 +105,6 @@ namespace Binarysharp.MemoryManagement.Threading
         /// </summary>
         public ProcessThread Native { get; private set; }
         #endregion
-        #region Teb
-        /// <summary>
-        /// The Thread Environment Block of the thread.
-        /// </summary>
-        public ManagedTeb Teb { get; private set; }
-        #endregion
         #endregion
 
         #region Constructor/Destructor
@@ -128,8 +122,6 @@ namespace Binarysharp.MemoryManagement.Threading
             Id = thread.Id;
             // Open the thread
             Handle = ThreadCore.OpenThread(ThreadAccessFlags.AllAccess, Id);
-            // Initialize the TEB
-            Teb = new ManagedTeb(MemorySharp, ManagedTeb.FindTeb(Handle));
         }
 
         /// <summary>
