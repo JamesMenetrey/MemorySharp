@@ -9,6 +9,7 @@
 using System;
 using Binarysharp.MemoryManagement.Memory;
 using Binarysharp.MemoryManagement.Threading;
+using Binarysharp.MemoryManagement.Threading.Windows;
 
 namespace Binarysharp.MemoryManagement.Native
 {
@@ -17,375 +18,395 @@ namespace Binarysharp.MemoryManagement.Native
     /// </summary>
     public class ManagedTeb : RemotePointer
     {
+        #region Fields
+        private readonly TebOffsets _offsets;
+        #endregion
+
         #region Properties
         /// <summary>
-        /// Current Structured Exception Handling (SEH) frame.
+        /// Gets the Structured Exception Handling (SEH) frame.
         /// </summary>
-        public IntPtr CurrentSehFrame
+        public IntPtr ExceptionList
         {
-            get { return Read<IntPtr>(TebStructure.CurrentSehFrame); }
-            set { Write(TebStructure.CurrentSehFrame, value); }
+            get => Read<IntPtr>(_offsets.ExceptionList);
+            set => Write(_offsets.ExceptionList, value);
         }
         /// <summary>
-        /// The top of stack.
+        /// Gets the top of stack.
         /// </summary>
-        public IntPtr TopOfStack
+        public IntPtr StackBase
         {
-            get { return Read<IntPtr>(TebStructure.TopOfStack); }
-            set { Write(TebStructure.TopOfStack, value); }
+            get => Read<IntPtr>(_offsets.StackBase);
+            set => Write(_offsets.StackBase, value);
         }
         /// <summary>
-        /// The current bottom of stack.
+        /// Gets the bottom of stack.
         /// </summary>
-        public IntPtr BottomOfStack
+        public IntPtr StackLimit
         {
-            get { return Read<IntPtr>(TebStructure.BottomOfStack); }
-            set { Write(TebStructure.BottomOfStack, value); }
+            get => Read<IntPtr>(_offsets.StackLimit);
+            set => Write(_offsets.StackLimit, value);
         }
         /// <summary>
-        /// The TEB sub system.
+        /// Gets the thread environment block (TEB) subsystem.
         /// </summary>
         public IntPtr SubSystemTeb
         {
-            get { return Read<IntPtr>(TebStructure.SubSystemTeb); }
-            set { Write(TebStructure.SubSystemTeb, value); }
+            get => Read<IntPtr>(_offsets.SubSystemTeb);
+            set => Write(_offsets.SubSystemTeb, value);
         }
         /// <summary>
-        /// The fiber data.
+        /// Gets the fiber data.
         /// </summary>
         public IntPtr FiberData
         {
-            get { return Read<IntPtr>(TebStructure.FiberData); }
-            set { Write(TebStructure.FiberData, value); }
+            get => Read<IntPtr>(_offsets.FiberData);
+            set => Write(_offsets.FiberData, value);
         }
-        /// <summary>
-        /// The arbitrary data slot.
-        /// </summary>
-        public IntPtr ArbitraryDataSlot
+
+        public IntPtr Version
         {
-            get { return Read<IntPtr>(TebStructure.ArbitraryDataSlot); }
-            set { Write(TebStructure.ArbitraryDataSlot, value); }
+            get => Read<IntPtr>(_offsets.Version);
+            set => Write(_offsets.Version, value);
         }
+
         /// <summary>
-        /// The linear address of Thread Environment Block (TEB).
+        /// Gets the arbitrary data slot.
         /// </summary>
-        public IntPtr Teb
+        public IntPtr ArbitraryUserPointer
         {
-            get { return Read<IntPtr>(TebStructure.Teb); }
-            set { Write(TebStructure.Teb, value); }
+            get => Read<IntPtr>(_offsets.ArbitraryUserPointer);
+            set => Write(_offsets.ArbitraryUserPointer, value);
         }
         /// <summary>
-        /// The environment pointer.
+        /// Gets the linear address of the thread environment block (TEB).
+        /// </summary>
+        public IntPtr TebAddress
+        {
+            get => Read<IntPtr>(_offsets.TebAddress);
+            set => Write(_offsets.TebAddress, value);
+        }
+        /// <summary>
+        /// Gets the environment pointer.
         /// </summary>
         public IntPtr EnvironmentPointer
         {
-            get { return Read<IntPtr>(TebStructure.EnvironmentPointer); }
-            set { Write(TebStructure.EnvironmentPointer, value); }
+            get => Read<IntPtr>(_offsets.EnvironmentPointer);
+            set => Write(_offsets.EnvironmentPointer, value);
         }
         /// <summary>
-        /// The process Id.
+        /// Gets the process identifier, also called UniqueProcess.
         /// </summary>
-        public int ProcessId
+        public IntPtr ProcessId
         {
-            get { return Read<int>(TebStructure.ProcessId); }
-            set { Write(TebStructure.ProcessId, value); }
+            get => Read<IntPtr>(_offsets.ProcessId);
+            set => Write(_offsets.ProcessId, value);
         }
         /// <summary>
-        /// The current thread Id.
+        /// Gets the thread identifier, also called UniqueThread.
         /// </summary>
-        public int ThreadId
+        public IntPtr ThreadId
         {
-            get { return Read<int>(TebStructure.ThreadId); }
-            set { Write(TebStructure.ThreadId, value); }
+            get => Read<IntPtr>(_offsets.ThreadId);
+            set => Write(_offsets.ThreadId, value);
         }
         /// <summary>
-        /// The active RPC handle.
+        /// Gets the active RPC handle.
         /// </summary>
         public IntPtr RpcHandle
         {
-            get { return Read<IntPtr>(TebStructure.RpcHandle); }
-            set { Write(TebStructure.RpcHandle, value); }
+            get => Read<IntPtr>(_offsets.ActiveRcpHandle);
+            set => Write(_offsets.ActiveRcpHandle, value);
         }
         /// <summary>
-        /// The linear address of the thread-local storage (TLS) array.
+        /// Gets the linear address of the thread-local storage (TLS) array.
         /// </summary>
-        public IntPtr Tls
+        public IntPtr ThreadLocalStoragePointer
         {
-            get { return Read<IntPtr>(TebStructure.Tls); }
-            set { Write(TebStructure.Tls, value); }
+            get => Read<IntPtr>(_offsets.ThreadLocalStoragePointer);
+            set => Write(_offsets.ThreadLocalStoragePointer, value);
         }
         /// <summary>
-        /// The linear address of Process Environment Block (PEB).
+        /// Gets the linear address of the process environment block (PEB).
         /// </summary>
-        public IntPtr Peb
+        public IntPtr PebPointer
         {
-            get { return Read<IntPtr>(TebStructure.Peb); }
-            set { Write(TebStructure.Peb, value); }
+            get => Read<IntPtr>(_offsets.PebPointer);
+            set => Write(_offsets.PebPointer, value);
         }
         /// <summary>
-        /// The last error number.
+        /// Gets the last error value.
         /// </summary>
-        public int LastErrorNumber
+        public uint LastErrorValue
         {
-            get { return Read<int>(TebStructure.LastErrorNumber); }
-            set { Write(TebStructure.LastErrorNumber, value); }
+            get => Read<uint>(_offsets.LastErrorValue);
+            set => Write(_offsets.LastErrorValue, value);
         }
         /// <summary>
-        /// The count of owned critical sections.
+        /// Gets the count of owned critical sections.
         /// </summary>
-        public int CriticalSectionsCount
+        public uint CountOfOwnedCriticalSections
         {
-            get { return Read<int>(TebStructure.CriticalSectionsCount); }
-            set { Write(TebStructure.CriticalSectionsCount, value); }
+            get => Read<uint>(_offsets.CountOfOwnedCriticalSections);
+            set => Write(_offsets.CountOfOwnedCriticalSections, value);
         }
         /// <summary>
-        /// The address of CSR Client Thread.
+        /// Gets the address of CSR client thread.
         /// </summary>
         public IntPtr CsrClientThread
         {
-            get { return Read<IntPtr>(TebStructure.CsrClientThread); }
-            set { Write(TebStructure.CsrClientThread, value); }
+            get => Read<IntPtr>(_offsets.CsrClientThread);
+            set => Write(_offsets.CsrClientThread, value);
         }
         /// <summary>
-        /// Win32 Thread Information.
+        /// Gets the Win32 thread information.
         /// </summary>
         public IntPtr Win32ThreadInfo
         {
-            get { return Read<IntPtr>(TebStructure.Win32ThreadInfo); }
-            set { Write(TebStructure.Win32ThreadInfo, value); }
+            get => Read<IntPtr>(_offsets.Win32ThreadInfo);
+            set => Write(_offsets.Win32ThreadInfo, value);
         }
         /// <summary>
-        /// Win32 client information (NT), user32 private data (Wine), 0x60 = LastError (Win95), 0x74 = LastError (WinME).
+        /// Gets the current locale.
         /// </summary>
-        public byte[] Win32ClientInfo
+        public uint CurrentLocale
         {
-            get { return Read<byte>(TebStructure.Win32ClientInfo, 124); }
-            set { Write(TebStructure.Win32ClientInfo, value); }
+            get => Read<uint>(_offsets.CurrentLocale);
+            set => Write(_offsets.CurrentLocale, value);
         }
         /// <summary>
-        /// Reserved for Wow64. Contains a pointer to FastSysCall in Wow64.
+        /// Gets the FP software status register.
         /// </summary>
-        public IntPtr WoW64Reserved
+        public uint FpSoftwareStatusRegister
         {
-            get { return Read<IntPtr>(TebStructure.WoW64Reserved); }
-            set { Write(TebStructure.WoW64Reserved, value); }
+            get => Read<uint>(_offsets.FpSoftwareStatusRegister);
+            set => Write(_offsets.FpSoftwareStatusRegister, value);
         }
         /// <summary>
-        /// The current locale
+        /// Gets the exception code.
         /// </summary>
-        public IntPtr CurrentLocale
+        public uint ExceptionCode
         {
-            get { return Read<IntPtr>(TebStructure.CurrentLocale); }
-            set { Write(TebStructure.CurrentLocale, value); }
+            get => Read<uint>(_offsets.ExceptionCode);
+            set => Write(_offsets.ExceptionCode, value);
         }
+
         /// <summary>
-        /// The FP Software Status Register.
+        /// Gets the real process identifier, also called RealUniqueProcess.
         /// </summary>
-        public IntPtr FpSoftwareStatusRegister
+        public IntPtr RealProcessId
         {
-            get { return Read<IntPtr>(TebStructure.FpSoftwareStatusRegister); }
-            set { Write(TebStructure.FpSoftwareStatusRegister, value); }
+            get => Read<IntPtr>(_offsets.RealProcessId);
+            set => Write(_offsets.RealProcessId, value);
         }
         /// <summary>
-        /// Reserved for OS (NT), kernel32 private data (Wine).
-        /// herein: FS:[0x124] 4 NT Pointer to KTHREAD (ETHREAD) structure.
+        /// Gets the real thread identifier, also called RealUniqueThread.
         /// </summary>
-        public byte[] SystemReserved1
+        public IntPtr RealThreadId
         {
-            get { return Read<byte>(TebStructure.SystemReserved1, 216); }
-            set { Write(TebStructure.SystemReserved1, value); }
+            get => Read<IntPtr>(_offsets.RealThreadId);
+            set => Write(_offsets.RealThreadId, value);
         }
+
         /// <summary>
-        /// The exception code.
-        /// </summary>
-        public IntPtr ExceptionCode
-        {
-            get { return Read<IntPtr>(TebStructure.ExceptionCode); }
-            set { Write(TebStructure.ExceptionCode, value); }
-        }
-        /// <summary>
-        /// The activation context stack.
-        /// </summary>
-        public byte[] ActivationContextStack
-        {
-            get { return Read<byte>(TebStructure.ActivationContextStack, 18); }
-            set { Write(TebStructure.ActivationContextStack, value); }
-        }
-        /// <summary>
-        /// The spare bytes (NT), ntdll private data (Wine).
-        /// </summary>
-        public byte[] SpareBytes
-        {
-            get { return Read<byte>(TebStructure.SpareBytes, 26); }
-            set { Write(TebStructure.SpareBytes, value); }
-        }
-        /// <summary>
-        /// Reserved for OS (NT), ntdll private data (Wine).
-        /// </summary>
-        public byte[] SystemReserved2
-        {
-            get { return Read<byte>(TebStructure.SystemReserved2, 40); }
-            set { Write(TebStructure.SystemReserved2, value); }
-        }
-        /// <summary>
-        /// The GDI TEB Batch (OS), vm86 private data (Wine).
-        /// </summary>
-        public byte[] GdiTebBatch
-        {
-            get { return Read<byte>(TebStructure.GdiTebBatch, 1248); }
-            set { Write(TebStructure.GdiTebBatch, value); }
-        }
-        /// <summary>
-        /// The GDI Region.
-        /// </summary>
-        public IntPtr GdiRegion
-        {
-            get { return Read<IntPtr>(TebStructure.GdiRegion); }
-            set { Write(TebStructure.GdiRegion, value); }
-        }
-        /// <summary>
-        /// The GDI Pen.
-        /// </summary>
-        public IntPtr GdiPen
-        {
-            get { return Read<IntPtr>(TebStructure.GdiPen); }
-            set { Write(TebStructure.GdiPen, value); }
-        }
-        /// <summary>
-        /// The GDI Brush.
-        /// </summary>
-        public IntPtr GdiBrush
-        {
-            get { return Read<IntPtr>(TebStructure.GdiBrush); }
-            set { Write(TebStructure.GdiBrush, value); }
-        }
-        /// <summary>
-        /// The real process Id.
-        /// </summary>
-        public int RealProcessId
-        {
-            get { return Read<int>(TebStructure.RealProcessId); }
-            set { Write(TebStructure.RealProcessId, value); }
-        }
-        /// <summary>
-        /// The real thread Id.
-        /// </summary>
-        public int RealThreadId
-        {
-            get { return Read<int>(TebStructure.RealThreadId); }
-            set { Write(TebStructure.RealThreadId, value); }
-        }
-        /// <summary>
-        /// The GDI cached process handle.
+        /// Gets the GDI cached process handle.
         /// </summary>
         public IntPtr GdiCachedProcessHandle
         {
-            get { return Read<IntPtr>(TebStructure.GdiCachedProcessHandle); }
-            set { Write(TebStructure.GdiCachedProcessHandle, value); }
+            get => Read<IntPtr>(_offsets.GdiCachedProcessHandle);
+            set => Write(_offsets.GdiCachedProcessHandle, value);
         }
         /// <summary>
-        /// The GDI client process Id (PID).
+        /// Gets the GDI client process identifier (PID).
         /// </summary>
-        public IntPtr GdiClientProcessId
+        public uint GdiClientProcessId
         {
-            get { return Read<IntPtr>(TebStructure.GdiClientProcessId); }
-            set { Write(TebStructure.GdiClientProcessId, value); }
+            get => Read<uint>(_offsets.GdiClientProcessId);
+            set => Write(_offsets.GdiClientProcessId, value);
         }
+
         /// <summary>
-        /// The GDI client thread Id (TID).
+        /// Gets the GDI client thread identifier (TID).
         /// </summary>
-        public IntPtr GdiClientThreadId
+        public uint GdiClientThreadId
         {
-            get { return Read<IntPtr>(TebStructure.GdiClientThreadId); }
-            set { Write(TebStructure.GdiClientThreadId, value); }
+            get => Read<uint>(_offsets.GdiClientThreadId);
+            set => Write(_offsets.GdiClientThreadId, value);
         }
         /// <summary>
-        /// The GDI thread locale information.
+        /// Gets the GDI thread locale information.
         /// </summary>
         public IntPtr GdiThreadLocalInfo
         {
-            get { return Read<IntPtr>(TebStructure.GdiThreadLocalInfo); }
-            set { Write(TebStructure.GdiThreadLocalInfo, value); }
+            get => Read<IntPtr>(_offsets.GdiThreadLocalInfo);
+            set => Write(_offsets.GdiThreadLocalInfo, value);
         }
         /// <summary>
-        /// Reserved for user application.
+        /// Gets the GL section information.
         /// </summary>
-        public byte[] UserReserved1
+        public IntPtr GlSectionInfo
         {
-            get { return Read<byte>(TebStructure.UserReserved1, 20); }
-            set { Write(TebStructure.UserReserved1, value); }
+            get => Read<IntPtr>(_offsets.GlSectionInfo);
+            set => Write(_offsets.GlSectionInfo, value);
         }
+
         /// <summary>
-        /// Reserved for GL.
+        /// Gets the GL section.
         /// </summary>
-        public byte[] GlReserved1
+        public IntPtr GlSection
         {
-            get { return Read<byte>(TebStructure.GlReserved1, 1248); }
-            set { Write(TebStructure.GlReserved1, value); }
+            get => Read<IntPtr>(_offsets.GlSection);
+            set => Write(_offsets.GlSection, value);
         }
         /// <summary>
-        /// The last value status value.
+        /// Gets the GL table.
         /// </summary>
-        public int LastStatusValue
+        public IntPtr GlTable
         {
-            get { return Read<int>(TebStructure.LastStatusValue); }
-            set { Write(TebStructure.LastStatusValue, value); }
+            get => Read<IntPtr>(_offsets.GlTable);
+            set => Write(_offsets.GlTable, value);
+        }
+        public IntPtr GlCurrentRc
+        {
+            get => Read<IntPtr>(_offsets.GlCurrentRc);
+            set => Write(_offsets.GlCurrentRc, value);
         }
         /// <summary>
-        /// The static UNICODE_STRING buffer.
+        /// Gets the GL context.
         /// </summary>
-        public byte[] StaticUnicodeString
+        public IntPtr GlContext
         {
-            get { return Read<byte>(TebStructure.StaticUnicodeString, 532); }
-            set { Write(TebStructure.StaticUnicodeString, value); }
+            get => Read<IntPtr>(_offsets.GlContext);
+            set => Write(_offsets.GlContext, value);
         }
         /// <summary>
-        /// The pointer to deallocation stack.
+        /// Gets the last status value.
+        /// </summary>
+        public uint LastStatusValue
+        {
+            get => Read<uint>(_offsets.LastStatusValue);
+            set => Write(_offsets.LastStatusValue, value);
+        }
+        /// <summary>
+        /// Gets the address of the deallocation stack.
         /// </summary>
         public IntPtr DeallocationStack
         {
-            get { return Read<IntPtr>(TebStructure.DeallocationStack); }
-            set { Write(TebStructure.DeallocationStack, value); }
+            get => Read<IntPtr>(_offsets.DeallocationStack);
+            set => Write(_offsets.DeallocationStack, value);
         }
         /// <summary>
-        /// The TLS slots, 4 byte per slot.
+        /// Gets the thread-local storage (TLS) slots.
+        /// They are an array of pointers (void*[]) for the TLS values.
         /// </summary>
         public IntPtr[] TlsSlots
         {
-            get { return Read<IntPtr>(TebStructure.TlsSlots, 64); }
-            set { Write(TebStructure.TlsSlots, value); }
+            get => Read<IntPtr[]>(_offsets.TlsSlots);
+            set => Write(_offsets.TlsSlots, value);
         }
         /// <summary>
-        /// The TLS links (LIST_ENTRY structure).
+        /// Gets the thread-local storage (TLS) link (first pointer of the structure LIST_ENTRY).
         /// </summary>
-        public long TlsLinks
+        public IntPtr TlsFLink
         {
-            get { return Read<long>(TebStructure.TlsLinks); }
-            set { Write(TebStructure.TlsLinks, value); }
+            get => Read<IntPtr>(_offsets.TlsFLink);
+            set => Write(_offsets.TlsFLink, value);
+        }
+
+        /// <summary>
+        /// Gets the thread-local storage (TLS) link (second pointer of the structure LIST_ENTRY).
+        /// </summary>
+        public IntPtr TlsBLink
+        {
+            get => Read<IntPtr>(_offsets.TlsBLink);
+            set => Write(_offsets.TlsBLink, value);
         }
         /// <summary>
-        /// Virtual DOS Machine.
+        /// Gets the virtual DOS machine.
         /// </summary>
         public IntPtr Vdm
         {
-            get { return Read<IntPtr>(TebStructure.Vdm); }
-            set { Write(TebStructure.Vdm, value); }
+            get => Read<IntPtr>(_offsets.TlsFLink);
+            set => Write(_offsets.TlsFLink, value);
         }
         /// <summary>
-        /// Reserved for RPC.
+        /// Gets the Winsock data.
         /// </summary>
-        public IntPtr RpcReserved
+        public IntPtr WinSockData
         {
-            get { return Read<IntPtr>(TebStructure.RpcReserved); }
-            set { Write(TebStructure.RpcReserved, value); }
+            get => Read<IntPtr>(_offsets.TlsFLink);
+            set => Write(_offsets.TlsFLink, value);
         }
         /// <summary>
-        /// The thread error mode (RtlSetThreadErrorMode).
+        /// Gets the GDI batch count.
         /// </summary>
-        public IntPtr ThreadErrorMode
+        public uint GdiBatchCount
         {
-            get { return Read<IntPtr>(TebStructure.ThreadErrorMode); }
-            set { Write(TebStructure.ThreadErrorMode, value); }
+            get => Read<uint>(_offsets.TlsFLink);
+            set => Write(_offsets.TlsFLink, value);
+        }
+        /// <summary>
+        /// Gets the preferred processor for the thread, used when the system schedules threads, 
+        /// to determine which processor to run the thread on.
+        /// </summary>
+        public byte IdealProcessor
+        {
+            get => Read<byte>(_offsets.IdealProcessor);
+            set => Write(_offsets.IdealProcessor, value);
+        }
+        public uint WaitingOnLoaderLock
+        {
+            get => Read<uint>(_offsets.WaitingOnLoaderLock);
+            set => Write(_offsets.WaitingOnLoaderLock, value);
+        }
+        /// <summary>
+        /// Gets the double pointer (void**) thread-local storage (TLS) expansion slots.
+        /// </summary>
+        public IntPtr TlsExpansionSlots
+        {
+            get => Read<IntPtr>(_offsets.TlsExpansionSlots);
+            set => Write(_offsets.TlsExpansionSlots, value);
+        }
+        /// <summary>
+        /// Indicates whether the thread is impersonating.
+        /// </summary>
+        public IntPtr IsIsmpersonating
+        {
+            get => Read<IntPtr>(_offsets.IsImpersonating);
+            set => Write(_offsets.IsImpersonating, value);
+        }
+        /// <summary>
+        /// Gets the NLS cache.
+        /// </summary>
+        public IntPtr NlsCache
+        {
+            get => Read<IntPtr>(_offsets.NlsCache);
+            set => Write(_offsets.NlsCache, value);
+        }
+        /// <summary>
+        /// Gets the shim data.
+        /// </summary>
+        public IntPtr ShimData
+        {
+            get => Read<IntPtr>(_offsets.ShimData);
+            set => Write(_offsets.ShimData, value);
+        }
+        /// <summary>
+        /// Gets the current transaction handle.
+        /// </summary>
+        public IntPtr CurrentTransactionHandle
+        {
+            get => Read<IntPtr>(_offsets.CurrentTransactionHandle);
+            set => Write(_offsets.CurrentTransactionHandle, value);
+        }
+
+        /// <summary>
+        /// Gets the pointer of the active frame.
+        /// </summary>
+        public IntPtr ActiveFramePointer
+        {
+            get => Read<IntPtr>(_offsets.ActiveFramePointer);
+            set => Write(_offsets.ActiveFramePointer, value);
         }
         #endregion
 
@@ -394,9 +415,12 @@ namespace Binarysharp.MemoryManagement.Native
         /// Initializes a new instance of the <see cref="ManagedTeb"/> class.
         /// </summary>
         /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
-        /// <param name="address">The location of the teb.</param>
-        internal ManagedTeb(MemorySharp memorySharp, IntPtr address) : base(memorySharp, address)
-        {}
+        /// <param name="thread">The thread that owns the thread environment block.</param>
+        /// <param name="offsets">The offsets of the thread environment block fields.</param>
+        internal ManagedTeb(MemorySharp memorySharp, WindowsRemoteThread thread, TebOffsets offsets) : base(memorySharp, FindTeb(thread.Handle))
+        {
+            _offsets = offsets;
+        }
         #endregion
 
         #region Methods
@@ -405,7 +429,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// </summary>
         /// <param name="threadHandle">A handle of the thread.</param>
         /// <returns>A <see cref="IntPtr"/> pointer of the TEB.</returns>
-        public static IntPtr FindTeb(SafeMemoryHandle threadHandle)
+        private static IntPtr FindTeb(SafeMemoryHandle threadHandle)
         {
             return ThreadCore.NtQueryInformationThread(threadHandle).TebBaseAddress;
         }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Binarysharp.MemoryManagement.Internals;
 using Binarysharp.MemoryManagement.Native;
+using Binarysharp.MemoryManagement.Threading.Windows;
 
 namespace Binarysharp.MemoryManagement.Threading
 {
@@ -16,7 +17,7 @@ namespace Binarysharp.MemoryManagement.Threading
         /// <summary>
         /// Gets the thread environment block.
         /// </summary>
-        public ManagedTeb Teb => new ManagedTeb(MemorySharp, ManagedTeb.FindTeb(Handle));
+        public ManagedTeb Teb { get; }
         #endregion
         #endregion
 
@@ -28,6 +29,7 @@ namespace Binarysharp.MemoryManagement.Threading
         /// <param name="thread">The native <see cref="ProcessThread" /> object.</param>
         internal WindowsRemoteThread(MemorySharp memorySharp, ProcessThread thread) : base(memorySharp, thread)
         {
+            Teb = new ManagedTeb(memorySharp, this, new Teb32Offsets());
         }
 
         /// <summary>
@@ -39,6 +41,7 @@ namespace Binarysharp.MemoryManagement.Threading
         internal WindowsRemoteThread(MemorySharp memorySharp, ProcessThread thread, IMarshalledValue parameter = null) :
             base(memorySharp, thread, parameter)
         {
+            Teb = new ManagedTeb(memorySharp, this, new Teb32Offsets());
         }
         #endregion Constructor/Destructor
 

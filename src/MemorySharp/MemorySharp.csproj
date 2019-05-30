@@ -139,6 +139,10 @@
     <Compile Include="Threading\ThreadCore.cs" />
     <Compile Include="Threading\ThreadFactory.cs" />
     <Compile Include="Threading\WindowsRemoteThread.cs" />
+    <Compile Include="Threading\Windows\Teb.cs" />
+    <Compile Include="Threading\Windows\Teb32Offsets.cs" />
+    <Compile Include="Threading\Windows\Teb64Offsets.cs" />
+    <Compile Include="Threading\Windows\TebOffsets.cs" />
     <Compile Include="Windows\Keyboard\BaseKeyboard.cs" />
     <Compile Include="Windows\Keyboard\MessageKeyboard.cs" />
     <Compile Include="Windows\Mouse\BaseMouse.cs" />

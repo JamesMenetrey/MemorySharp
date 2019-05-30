@@ -77,7 +77,7 @@ namespace MemorySharpTests.Threading
             Assert.AreNotEqual(0, context.Eip);
 #elif x64
             // The data structure must be aligned to 16 bytes
-            StackAllocAlignment.Allocate(16, (ref ThreadContext64 context) =>
+            Binarysharp.MemoryManagement.Helpers.StackAllocAlignment.Allocate(16, (ref ThreadContext64 context) =>
             {
                 context.ContextFlags = ThreadContextFlags.All;
                 sharp.Threads.MainThread.GetContext(ref context);
@@ -124,7 +124,7 @@ namespace MemorySharpTests.Threading
             var tid = thread.Teb.ThreadId;
 
             // Assert
-            Assert.AreEqual(thread.Id, tid);
+            Assert.AreEqual(thread.Id, tid.ToInt32());
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace MemorySharpTests.Threading
             const ulong newRip = 0x666;
 
             // The data structure must be aligned to 16 bytes
-            StackAllocAlignment.Allocate(16, (ref ThreadContext64 context) =>
+            Binarysharp.MemoryManagement.Helpers.StackAllocAlignment.Allocate(16, (ref ThreadContext64 context) =>
             {
                 // Get the original value
                 context.ContextFlags = ThreadContextFlags.All;
