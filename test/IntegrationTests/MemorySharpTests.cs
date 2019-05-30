@@ -9,6 +9,8 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using Binarysharp.MemoryManagement.Helpers;
+using Binarysharp.MemoryManagement.Native;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MemorySharpTests
@@ -74,6 +76,23 @@ namespace MemorySharpTests
 
             // Assert
             Assert.AreEqual(offset, relative, "Couldn't get the relative address.");
+        }
+
+        /// <summary>
+        /// Determines whether the target process is 64-bit.
+        /// </summary>
+        [TestMethod]
+        public void Is64Process_ShouldMatchArchitectureOfTestProject()
+        {
+            // Arrange
+            var handle = Resources.MemorySharp.Handle;
+
+            // Act
+            var is64TestProcess = ArchitectureDetector.Is64Process(handle);
+            var is64SelfProcess = IntPtr.Size == 8;
+
+            // Assert
+            Assert.AreEqual(is64SelfProcess, is64TestProcess);
         }
 
         /// <summary>

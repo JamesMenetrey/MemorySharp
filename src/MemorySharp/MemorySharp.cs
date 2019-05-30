@@ -37,7 +37,11 @@ namespace Binarysharp.MemoryManagement
         /// <summary>
         /// The factories embedded inside the library.
         /// </summary>
-        protected List<IFactory> Factories;
+        protected readonly List<IFactory> Factories;
+        /// <summary>
+        /// The internal field that stores lazy evaluation fo the architecture of the process.
+        /// </summary>
+        private readonly Lazy<bool> _is64Process;
         #endregion
 
         #region Properties
@@ -46,6 +50,12 @@ namespace Binarysharp.MemoryManagement
         /// Factory for generating assembly code.
         /// </summary>
         public AssemblyFactory Assembly { get; protected set; }
+        #endregion
+        #region Is64Process        
+        /// <summary>
+        /// Gets a value indicating whether this is a 64-bit process.
+        /// </summary>
+        public bool Is64Process => _is64Process.Value;
         #endregion
         #region IsDebugged
         /// <summary>
@@ -152,6 +162,9 @@ namespace Binarysharp.MemoryManagement
 
             // Open the process with all rights
             Handle = MemoryCore.OpenProcess(ProcessAccessFlags.AllAccess, process.Id);
+
+            // Initialize the architecture detector
+            _is64Process = new Lazy<bool>(() => ArchitectureDetector.Is64Process(Handle));
 
             // Initialize the PEB
             Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));

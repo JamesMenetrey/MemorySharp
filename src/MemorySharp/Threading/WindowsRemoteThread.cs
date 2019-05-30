@@ -29,7 +29,7 @@ namespace Binarysharp.MemoryManagement.Threading
         /// <param name="thread">The native <see cref="ProcessThread" /> object.</param>
         internal WindowsRemoteThread(MemorySharp memorySharp, ProcessThread thread) : base(memorySharp, thread)
         {
-            Teb = new ManagedTeb(memorySharp, this, new Teb32Offsets());
+            Teb = new ManagedTeb(memorySharp, this);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Binarysharp.MemoryManagement.Threading
         internal WindowsRemoteThread(MemorySharp memorySharp, ProcessThread thread, IMarshalledValue parameter = null) :
             base(memorySharp, thread, parameter)
         {
-            Teb = new ManagedTeb(memorySharp, this, new Teb32Offsets());
+            Teb = new ManagedTeb(memorySharp, this);
         }
         #endregion Constructor/Destructor
 

@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Assembly\AssemblyFactoryTests.cs" />
     <Compile Include="Helpers\ApplicationFinderTests.cs" />
+    <Compile Include="Helpers\ArchitectureDetectorTests.cs" />
     <Compile Include="Helpers\HandleManipulatorTests.cs" />
     <Compile Include="Helpers\IntPtrExtensionsTests.cs" />
     <Compile Include="Helpers\SingletonTests.cs" />

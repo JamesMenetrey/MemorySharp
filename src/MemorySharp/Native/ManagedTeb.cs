@@ -6,7 +6,9 @@
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
 */
+
 using System;
+using Binarysharp.MemoryManagement.Helpers;
 using Binarysharp.MemoryManagement.Memory;
 using Binarysharp.MemoryManagement.Threading;
 using Binarysharp.MemoryManagement.Threading.Windows;
@@ -20,7 +22,7 @@ namespace Binarysharp.MemoryManagement.Native
     {
         #region Fields
         private readonly TebOffsets _offsets;
-        #endregion
+        #endregion Fields
 
         #region Properties
         /// <summary>
@@ -31,6 +33,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.ExceptionList);
             set => Write(_offsets.ExceptionList, value);
         }
+
         /// <summary>
         /// Gets the top of stack.
         /// </summary>
@@ -39,6 +42,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.StackBase);
             set => Write(_offsets.StackBase, value);
         }
+
         /// <summary>
         /// Gets the bottom of stack.
         /// </summary>
@@ -47,6 +51,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.StackLimit);
             set => Write(_offsets.StackLimit, value);
         }
+
         /// <summary>
         /// Gets the thread environment block (TEB) subsystem.
         /// </summary>
@@ -55,6 +60,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.SubSystemTeb);
             set => Write(_offsets.SubSystemTeb, value);
         }
+
         /// <summary>
         /// Gets the fiber data.
         /// </summary>
@@ -78,6 +84,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.ArbitraryUserPointer);
             set => Write(_offsets.ArbitraryUserPointer, value);
         }
+
         /// <summary>
         /// Gets the linear address of the thread environment block (TEB).
         /// </summary>
@@ -86,6 +93,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.TebAddress);
             set => Write(_offsets.TebAddress, value);
         }
+
         /// <summary>
         /// Gets the environment pointer.
         /// </summary>
@@ -94,6 +102,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.EnvironmentPointer);
             set => Write(_offsets.EnvironmentPointer, value);
         }
+
         /// <summary>
         /// Gets the process identifier, also called UniqueProcess.
         /// </summary>
@@ -102,6 +111,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.ProcessId);
             set => Write(_offsets.ProcessId, value);
         }
+
         /// <summary>
         /// Gets the thread identifier, also called UniqueThread.
         /// </summary>
@@ -110,6 +120,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.ThreadId);
             set => Write(_offsets.ThreadId, value);
         }
+
         /// <summary>
         /// Gets the active RPC handle.
         /// </summary>
@@ -118,6 +129,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.ActiveRcpHandle);
             set => Write(_offsets.ActiveRcpHandle, value);
         }
+
         /// <summary>
         /// Gets the linear address of the thread-local storage (TLS) array.
         /// </summary>
@@ -126,6 +138,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.ThreadLocalStoragePointer);
             set => Write(_offsets.ThreadLocalStoragePointer, value);
         }
+
         /// <summary>
         /// Gets the linear address of the process environment block (PEB).
         /// </summary>
@@ -134,6 +147,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.PebPointer);
             set => Write(_offsets.PebPointer, value);
         }
+
         /// <summary>
         /// Gets the last error value.
         /// </summary>
@@ -142,6 +156,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<uint>(_offsets.LastErrorValue);
             set => Write(_offsets.LastErrorValue, value);
         }
+
         /// <summary>
         /// Gets the count of owned critical sections.
         /// </summary>
@@ -150,6 +165,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<uint>(_offsets.CountOfOwnedCriticalSections);
             set => Write(_offsets.CountOfOwnedCriticalSections, value);
         }
+
         /// <summary>
         /// Gets the address of CSR client thread.
         /// </summary>
@@ -158,6 +174,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.CsrClientThread);
             set => Write(_offsets.CsrClientThread, value);
         }
+
         /// <summary>
         /// Gets the Win32 thread information.
         /// </summary>
@@ -166,6 +183,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.Win32ThreadInfo);
             set => Write(_offsets.Win32ThreadInfo, value);
         }
+
         /// <summary>
         /// Gets the current locale.
         /// </summary>
@@ -174,6 +192,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<uint>(_offsets.CurrentLocale);
             set => Write(_offsets.CurrentLocale, value);
         }
+
         /// <summary>
         /// Gets the FP software status register.
         /// </summary>
@@ -182,6 +201,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<uint>(_offsets.FpSoftwareStatusRegister);
             set => Write(_offsets.FpSoftwareStatusRegister, value);
         }
+
         /// <summary>
         /// Gets the exception code.
         /// </summary>
@@ -199,6 +219,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.RealProcessId);
             set => Write(_offsets.RealProcessId, value);
         }
+
         /// <summary>
         /// Gets the real thread identifier, also called RealUniqueThread.
         /// </summary>
@@ -216,6 +237,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.GdiCachedProcessHandle);
             set => Write(_offsets.GdiCachedProcessHandle, value);
         }
+
         /// <summary>
         /// Gets the GDI client process identifier (PID).
         /// </summary>
@@ -233,6 +255,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<uint>(_offsets.GdiClientThreadId);
             set => Write(_offsets.GdiClientThreadId, value);
         }
+
         /// <summary>
         /// Gets the GDI thread locale information.
         /// </summary>
@@ -241,6 +264,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.GdiThreadLocalInfo);
             set => Write(_offsets.GdiThreadLocalInfo, value);
         }
+
         /// <summary>
         /// Gets the GL section information.
         /// </summary>
@@ -258,6 +282,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.GlSection);
             set => Write(_offsets.GlSection, value);
         }
+
         /// <summary>
         /// Gets the GL table.
         /// </summary>
@@ -266,11 +291,13 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.GlTable);
             set => Write(_offsets.GlTable, value);
         }
+
         public IntPtr GlCurrentRc
         {
             get => Read<IntPtr>(_offsets.GlCurrentRc);
             set => Write(_offsets.GlCurrentRc, value);
         }
+
         /// <summary>
         /// Gets the GL context.
         /// </summary>
@@ -279,6 +306,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.GlContext);
             set => Write(_offsets.GlContext, value);
         }
+
         /// <summary>
         /// Gets the last status value.
         /// </summary>
@@ -287,6 +315,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<uint>(_offsets.LastStatusValue);
             set => Write(_offsets.LastStatusValue, value);
         }
+
         /// <summary>
         /// Gets the address of the deallocation stack.
         /// </summary>
@@ -295,6 +324,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.DeallocationStack);
             set => Write(_offsets.DeallocationStack, value);
         }
+
         /// <summary>
         /// Gets the thread-local storage (TLS) slots.
         /// They are an array of pointers (void*[]) for the TLS values.
@@ -304,6 +334,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr[]>(_offsets.TlsSlots);
             set => Write(_offsets.TlsSlots, value);
         }
+
         /// <summary>
         /// Gets the thread-local storage (TLS) link (first pointer of the structure LIST_ENTRY).
         /// </summary>
@@ -321,6 +352,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.TlsBLink);
             set => Write(_offsets.TlsBLink, value);
         }
+
         /// <summary>
         /// Gets the virtual DOS machine.
         /// </summary>
@@ -329,6 +361,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.TlsFLink);
             set => Write(_offsets.TlsFLink, value);
         }
+
         /// <summary>
         /// Gets the Winsock data.
         /// </summary>
@@ -337,6 +370,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.TlsFLink);
             set => Write(_offsets.TlsFLink, value);
         }
+
         /// <summary>
         /// Gets the GDI batch count.
         /// </summary>
@@ -345,8 +379,9 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<uint>(_offsets.TlsFLink);
             set => Write(_offsets.TlsFLink, value);
         }
+
         /// <summary>
-        /// Gets the preferred processor for the thread, used when the system schedules threads, 
+        /// Gets the preferred processor for the thread, used when the system schedules threads,
         /// to determine which processor to run the thread on.
         /// </summary>
         public byte IdealProcessor
@@ -354,11 +389,13 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<byte>(_offsets.IdealProcessor);
             set => Write(_offsets.IdealProcessor, value);
         }
+
         public uint WaitingOnLoaderLock
         {
             get => Read<uint>(_offsets.WaitingOnLoaderLock);
             set => Write(_offsets.WaitingOnLoaderLock, value);
         }
+
         /// <summary>
         /// Gets the double pointer (void**) thread-local storage (TLS) expansion slots.
         /// </summary>
@@ -367,6 +404,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.TlsExpansionSlots);
             set => Write(_offsets.TlsExpansionSlots, value);
         }
+
         /// <summary>
         /// Indicates whether the thread is impersonating.
         /// </summary>
@@ -375,6 +413,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.IsImpersonating);
             set => Write(_offsets.IsImpersonating, value);
         }
+
         /// <summary>
         /// Gets the NLS cache.
         /// </summary>
@@ -383,6 +422,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.NlsCache);
             set => Write(_offsets.NlsCache, value);
         }
+
         /// <summary>
         /// Gets the shim data.
         /// </summary>
@@ -391,6 +431,7 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.ShimData);
             set => Write(_offsets.ShimData, value);
         }
+
         /// <summary>
         /// Gets the current transaction handle.
         /// </summary>
@@ -408,31 +449,33 @@ namespace Binarysharp.MemoryManagement.Native
             get => Read<IntPtr>(_offsets.ActiveFramePointer);
             set => Write(_offsets.ActiveFramePointer, value);
         }
-        #endregion
+        #endregion Properties
 
         #region Constructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="ManagedTeb"/> class.
+        /// Initializes a new instance of the <see cref="ManagedTeb" /> class.
         /// </summary>
-        /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
+        /// <param name="memorySharp">The reference of the <see cref="MemorySharp" /> object.</param>
         /// <param name="thread">The thread that owns the thread environment block.</param>
-        /// <param name="offsets">The offsets of the thread environment block fields.</param>
-        internal ManagedTeb(MemorySharp memorySharp, WindowsRemoteThread thread, TebOffsets offsets) : base(memorySharp, FindTeb(thread.Handle))
+        internal ManagedTeb(MemorySharp memorySharp, WindowsRemoteThread thread)
+            : base(memorySharp, FindTeb(thread.Handle))
         {
-            _offsets = offsets;
+            _offsets = memorySharp.Is64Process
+                ? (TebOffsets) Singleton<Teb64Offsets>.Instance
+                : Singleton<Teb32Offsets>.Instance;
         }
-        #endregion
+        #endregion Constructor
 
         #region Methods
         /// <summary>
         /// Finds the Thread Environment Block address of a specified thread.
         /// </summary>
         /// <param name="threadHandle">A handle of the thread.</param>
-        /// <returns>A <see cref="IntPtr"/> pointer of the TEB.</returns>
+        /// <returns>A <see cref="IntPtr" /> pointer of the TEB.</returns>
         private static IntPtr FindTeb(SafeMemoryHandle threadHandle)
         {
             return ThreadCore.NtQueryInformationThread(threadHandle).TebBaseAddress;
         }
-        #endregion
+        #endregion Methods
     }
 }
