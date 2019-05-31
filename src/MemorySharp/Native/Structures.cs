@@ -353,6 +353,7 @@ namespace Binarysharp.MemoryManagement.Native
     /// <summary>
     /// Structure containing basic information about a process.
     /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
     public struct ProcessBasicInformation
     {
         /// <summary>
