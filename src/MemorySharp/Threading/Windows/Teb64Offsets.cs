@@ -7,8 +7,8 @@
     /// The definition of the TEB has been found on the terminus project:
     /// http://terminus.rewolf.pl/terminus/structures/ntdll/_TEB_combined.html.
     /// </remarks>
-    /// <seealso cref="Binarysharp.MemoryManagement.Threading.Windows.TebOffsets" />
-    public class Teb64Offsets : TebOffsets
+    /// <seealso cref="ITebOffsets" />
+    public class Teb64Offsets : ITebOffsets
     {
         public int ExceptionList => 0;
         public int StackBase => 0x8;

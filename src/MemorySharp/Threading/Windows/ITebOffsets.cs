@@ -1,13 +1,12 @@
 ﻿namespace Binarysharp.MemoryManagement.Threading.Windows
 {
-    internal interface TebOffsets
+    internal interface ITebOffsets
     {
         int ExceptionList { get; }
         int StackBase { get; }
         int StackLimit { get; }
         int SubSystemTeb { get; }
         int FiberData { get; }
-
         int Version { get; }
         int ArbitraryUserPointer { get; }
         int TebAddress { get; }

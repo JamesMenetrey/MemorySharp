@@ -10,10 +10,9 @@
 using System;
 using Binarysharp.MemoryManagement.Helpers;
 using Binarysharp.MemoryManagement.Memory;
-using Binarysharp.MemoryManagement.Threading;
-using Binarysharp.MemoryManagement.Threading.Windows;
+using Binarysharp.MemoryManagement.Native;
 
-namespace Binarysharp.MemoryManagement.Native
+namespace Binarysharp.MemoryManagement.Threading.Windows
 {
     /// <summary>
     /// Class representing the Thread Environment Block of a remote thread.
@@ -24,7 +23,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// <summary>
         /// The offsets of the thread environment block for a given architecture.
         /// </summary>
-        private readonly TebOffsets _offsets;
+        private readonly ITebOffsets _offsets;
         #endregion Fields
 
         #region Properties
@@ -464,7 +463,7 @@ namespace Binarysharp.MemoryManagement.Native
             : base(memorySharp, FindTeb(thread.Handle))
         {
             _offsets = memorySharp.Is64Process
-                ? (TebOffsets) Singleton<Teb64Offsets>.Instance
+                ? (ITebOffsets) Singleton<Teb64Offsets>.Instance
                 : Singleton<Teb32Offsets>.Instance;
         }
         #endregion Constructor

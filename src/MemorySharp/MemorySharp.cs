@@ -45,7 +45,7 @@ namespace Binarysharp.MemoryManagement
         /// <summary>
         /// The internal field that stores the lazy evaluation for the managed process environment block.
         /// </summary>
-        private readonly Lazy<ManagedPeb> _managedPeb;
+        private readonly Lazy<ManagedPeb> _peb;
         #endregion
 
         #region Properties
@@ -108,7 +108,7 @@ namespace Binarysharp.MemoryManagement
         /// <summary>
         /// The Process Environment Block of the process.
         /// </summary>
-        public ManagedPeb Peb => _managedPeb.Value;
+        public ManagedPeb Peb => _peb.Value;
         #endregion
         #region Pid
         /// <summary>
@@ -171,7 +171,7 @@ namespace Binarysharp.MemoryManagement
             _is64Process = new Lazy<bool>(() => ArchitectureDetector.Is64Process(Handle));
 
             // Initialize the PEB
-            _managedPeb = new Lazy<ManagedPeb>(() => new ManagedPeb(this));
+            _peb = new Lazy<ManagedPeb>(() => new ManagedPeb(this));
 
             // Create instances of the factories
             Factories = new List<IFactory>();

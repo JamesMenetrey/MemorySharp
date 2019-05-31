@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Binarysharp.MemoryManagement.Internals;
 using Binarysharp.MemoryManagement.Native;
+using Binarysharp.MemoryManagement.Threading.Windows;
 using ThreadState = System.Diagnostics.ThreadState;
 
 namespace Binarysharp.MemoryManagement.Threading
