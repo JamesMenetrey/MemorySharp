@@ -21,7 +21,7 @@ namespace Binarysharp.MemoryManagement.Threading
     /// <summary>
     /// Class representing a thread in the remote process.
     /// </summary>
-    public abstract class RemoteThread : IDisposable, IEquatable<RemoteThread>
+    public class RemoteThread : IDisposable, IEquatable<RemoteThread>
     {
         #region Fields
         /// <summary>
@@ -36,6 +36,10 @@ namespace Binarysharp.MemoryManagement.Threading
         /// The task involved in cleaning the parameter memory when the <see cref="RemoteThread"/> object is collected.
         /// </summary>
         private readonly Task _parameterCleaner;
+        /// <summary>
+        /// The internal field that stores the lazy evaluation for the managed thread environment block.
+        /// </summary>
+        private readonly Lazy<ManagedTeb> _teb;
         #endregion
 
         #region Properties
@@ -105,6 +109,12 @@ namespace Binarysharp.MemoryManagement.Threading
         /// </summary>
         public ProcessThread Native { get; private set; }
         #endregion
+        #region Teb        
+        /// <summary>
+        /// Gets the thread environment block.
+        /// </summary>
+        public ManagedTeb Teb => _teb.Value;
+        #endregion
         #endregion
 
         #region Constructor/Destructor
@@ -122,6 +132,8 @@ namespace Binarysharp.MemoryManagement.Threading
             Id = thread.Id;
             // Open the thread
             Handle = ThreadCore.OpenThread(ThreadAccessFlags.AllAccess, Id);
+            // Initialize the TEB lazy loader
+            _teb = new Lazy<ManagedTeb>(() => new ManagedTeb(memorySharp, this));
         }
 
         /// <summary>
@@ -240,6 +252,52 @@ namespace Binarysharp.MemoryManagement.Threading
             return Id.GetHashCode() ^ MemorySharp.GetHashCode();
         }
         #endregion
+        #region GetRealSegmentAddress
+        /// <summary>
+        /// Gets the linear address of a specified segment.
+        /// </summary>
+        /// <param name="segment">The segment to get.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>A <see cref="IntPtr" /> pointer corresponding to the linear address of the segment.</returns>
+        /// <exception cref="InvalidEnumArgumentException">segment</exception>
+        public IntPtr GetRealSegmentAddress(SegmentRegisters segment, ref ThreadContext32 context)
+        {
+            // Get a selector entry for the segment
+            LdtEntry entry;
+            switch (segment)
+            {
+                case SegmentRegisters.Cs:
+                    entry = ThreadCore.GetThreadSelectorEntry(Handle, context.SegCs);
+                    break;
+
+                case SegmentRegisters.Ds:
+                    entry = ThreadCore.GetThreadSelectorEntry(Handle, context.SegDs);
+                    break;
+
+                case SegmentRegisters.Es:
+                    entry = ThreadCore.GetThreadSelectorEntry(Handle, context.SegEs);
+                    break;
+
+                case SegmentRegisters.Fs:
+                    entry = ThreadCore.GetThreadSelectorEntry(Handle, context.SegFs);
+                    break;
+
+                case SegmentRegisters.Gs:
+                    entry = ThreadCore.GetThreadSelectorEntry(Handle, context.SegGs);
+                    break;
+
+                case SegmentRegisters.Ss:
+                    entry = ThreadCore.GetThreadSelectorEntry(Handle, context.SegSs);
+                    break;
+
+                default:
+                    throw new InvalidEnumArgumentException(nameof(segment), (int)segment, typeof(SegmentRegisters));
+            }
+
+            // Compute the linear address
+            return new IntPtr(entry.BaseLow | (entry.BaseMid << 16) | (entry.BaseHi << 24));
+        }
+        #endregion GetRealSegmentAddress
         #region Operator (override)
         public static bool operator ==(RemoteThread left, RemoteThread right)
         {

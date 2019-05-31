@@ -118,7 +118,7 @@ namespace MemorySharpTests.Threading
         {
             // Arrange
             var sharp = Resources.MemorySharp;
-            var thread = (WindowsRemoteThread)sharp.Threads.MainThread;
+            var thread = sharp.Threads.MainThread;
 
             // Act
             var tid = thread.Teb.ThreadId;

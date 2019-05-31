@@ -460,7 +460,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// </summary>
         /// <param name="memorySharp">The reference of the <see cref="MemorySharp" /> object.</param>
         /// <param name="thread">The thread that owns the thread environment block.</param>
-        internal ManagedTeb(MemorySharp memorySharp, WindowsRemoteThread thread)
+        internal ManagedTeb(MemorySharp memorySharp, RemoteThread thread)
             : base(memorySharp, FindTeb(thread.Handle))
         {
             _offsets = memorySharp.Is64Process
