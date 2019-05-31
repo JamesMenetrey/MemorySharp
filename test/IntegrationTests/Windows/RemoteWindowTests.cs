@@ -125,10 +125,10 @@ namespace MemorySharpTests.Windows
 
             // Act
             sharp.Windows.MainWindow.Close();
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
 
             // Assert
-            Assert.IsTrue(sharp.IsRunning, "The process is not closed.");
+            Assert.IsFalse(sharp.IsRunning, "The process is not closed.");
             Resources.Restart();
         }
     }

@@ -89,10 +89,10 @@ namespace MemorySharpTests.Helpers
             var process = Resources.ProcessTest;
 
             // Act
-            var ret = ApplicationFinder.FromWindowClassName("Notepad++").First();
+            var applications = ApplicationFinder.FromWindowClassName("Qt5QWindowIcon");
 
             // Assert
-            Assert.AreEqual(process.Id, ret.Id, "Both processes are not equal.");
+            Assert.IsTrue(applications.Any(app => app.Id == process.Id), "Both processes are not equal.");
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace MemorySharpTests.Helpers
             var process = Resources.ProcessTest;
 
             // Act
-            var ret = ApplicationFinder.FromWindowTitle("new 1 - Notepad++").First();
+            var ret = ApplicationFinder.FromWindowTitle("MainWindow").First();
 
             // Assert
             Assert.AreEqual(process.Id, ret.Id, "Both processes are not equal.");
@@ -138,7 +138,7 @@ namespace MemorySharpTests.Helpers
             var process = Resources.ProcessTest;
 
             // Act
-            var ret = ApplicationFinder.FromWindowTitleContains("Notepad++").First();
+            var ret = ApplicationFinder.FromWindowTitleContains("Main").First();
 
             // Assert
             Assert.AreEqual(process.Id, ret.Id, "Both processes are not equal.");

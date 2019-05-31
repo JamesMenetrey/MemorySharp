@@ -18,19 +18,19 @@ namespace MemorySharpTests.Windows
     public class KeyboardTests
     {
         /// <summary>
-        /// Presses and releases the bottom arrow key during 3 seconds in Scintilla.
+        /// Presses and releases the right arrow key during 2 seconds in the main window.
         /// </summary>
         /// <remarks>Manual assert.</remarks>
         [TestMethod]
-        public void ArrowBottom3Sec()
+        public void ArrowRight2Sec()
         {
             // Arrange
-            var scintilla = Resources.MemorySharp.Windows.GetWindowsByClassName("Scintilla").First();
+            var mainWindow = Resources.MemorySharp.Windows.MainWindow;
 
             // Act
-            scintilla.Keyboard.Press(Keys.Down, TimeSpan.FromMilliseconds(20));
-            Thread.Sleep(3000);
-            scintilla.Keyboard.Release(Keys.Down);
+            mainWindow.Keyboard.Press(Keys.Right, TimeSpan.FromMilliseconds(20));
+            Thread.Sleep(2000);
+            mainWindow.Keyboard.Release(Keys.Right);
 
             // Assert
             Assert.Inconclusive("Manual assert");
@@ -54,17 +54,17 @@ namespace MemorySharpTests.Windows
         }
 
         /// <summary>
-        /// Writes a text in Scintilla.
+        /// Writes a text in the main window.
         /// </summary>
         /// <remarks>Manual assert.</remarks>
         [TestMethod]
         public void WriteText()
         {
             // Arrange
-            var scintilla = Resources.MemorySharp.Windows.GetWindowsByClassName("Scintilla").First();
+            var mainWindow = Resources.MemorySharp.Windows.MainWindow;
 
             // Act
-            scintilla.Keyboard.Write("<B1n@rYsH-arP^^$$#>");
+            mainWindow.Keyboard.Write("<B1n@rYsH-arP^^$$#>");
 
             // Assert
             Assert.Inconclusive("Manual assert");

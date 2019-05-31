@@ -57,7 +57,7 @@ namespace MemorySharpTests.Windows
             var sharp = Resources.MemorySharp;
 
             // Act
-            var windows = sharp.Windows.GetWindowsByClassName("Scintilla");
+            var windows = sharp.Windows.GetWindowsByClassName("Qt5QWindowIcon");
 
             // Assert
             Assert.IsTrue(windows.Any(), "Cannot find Scintilla (or it's not Notepad++).");
@@ -73,7 +73,7 @@ namespace MemorySharpTests.Windows
             var sharp = Resources.MemorySharp;
 
             // Act
-            var windows = sharp.Windows.GetWindowsByTitleContains("Notepad++");
+            var windows = sharp.Windows.GetWindowsByTitleContains("Main");
 
             // Assert
             Assert.IsTrue(windows.Any(), "Cannot find Notepad++ window.");

@@ -23,7 +23,7 @@ namespace MemorySharpTests.Windows
         /// Gets all windows and checks if the process test is present.
         /// </summary>
         [TestMethod]
-        public void EnumTopLevelWindowsCheckPrecence()
+        public void EnumTopLevelWindowsCheckPresence()
         {
             // Arrange
             var handle = Resources.ProcessTest.MainWindowHandle;
@@ -103,6 +103,7 @@ namespace MemorySharpTests.Windows
             try
             {
                 WindowCore.SetForegroundWindow(handle);
+                Thread.Sleep(500);
                 var ret = WindowCore.GetForegroundWindow();
                 Assert.AreEqual(handle, ret, "Couldn't set or get the foreground.");
             }
@@ -124,7 +125,7 @@ namespace MemorySharpTests.Windows
 
             // Act
             WindowCore.PostMessage(process.MainWindowHandle, WindowsMessages.Close, UIntPtr.Zero, UIntPtr.Zero);
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
 
             // Assert
             Assert.IsTrue(process.HasExited, "The process didn't exited.");
@@ -142,7 +143,7 @@ namespace MemorySharpTests.Windows
 
             // Act
             WindowCore.SendMessage(process.MainWindowHandle, WindowsMessages.Close, UIntPtr.Zero, IntPtr.Zero);
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
 
             // Assert
             Assert.IsTrue(process.HasExited, "The process didn't exited.");
@@ -177,6 +178,7 @@ namespace MemorySharpTests.Windows
 
             // Act
             WindowCore.SetWindowText(handle, value);
+            Thread.Sleep(500);
             var title = WindowCore.GetWindowText(handle);
 
             // Assert
@@ -197,7 +199,7 @@ namespace MemorySharpTests.Windows
             var className = WindowCore.GetClassName(handle);
 
             // Assert
-            Assert.AreEqual("Notepad++", className, "The class name strings are not equal (or it's note Notepad++).");
+            Assert.AreEqual("Qt5QWindowIcon", className, "The class name strings are not equal (or it's note Notepad++).");
         }
 
         /// <summary>
@@ -211,6 +213,7 @@ namespace MemorySharpTests.Windows
 
             // Act
             WindowCore.SetWindowPlacement(handle, 400, 400, 400, 400);
+            Thread.Sleep(500);
             var placement = WindowCore.GetWindowPlacement(handle);
 
             // Assert

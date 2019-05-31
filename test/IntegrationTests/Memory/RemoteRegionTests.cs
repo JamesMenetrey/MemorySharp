@@ -22,6 +22,7 @@ namespace MemorySharpTests.Memory
         public void ChangeProtection()
         {
             // Arrange
+            Resources.Restart();
             var sharp = Resources.MemorySharp;
 
             // Act - Assert

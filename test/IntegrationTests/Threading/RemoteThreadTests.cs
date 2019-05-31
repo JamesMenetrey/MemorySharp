@@ -103,7 +103,7 @@ namespace MemorySharpTests.Threading
             sharp.Threads.MainThread.GetContext(ref context);
 
             var thread = sharp.Threads.MainThread;
-            var fs = ((WindowsRemoteThread)thread).GetRealSegmentAddress(SegmentRegisters.Fs, ref context);
+            var fs = thread.GetRealSegmentAddress(SegmentRegisters.Fs, ref context);
 
             // Assert
             Assert.AreNotEqual(IntPtr.Zero, fs, "The FS segment is null.");
