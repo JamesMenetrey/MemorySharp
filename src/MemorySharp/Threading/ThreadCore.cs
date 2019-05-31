@@ -163,10 +163,8 @@ namespace Binarysharp.MemoryManagement.Threading
 
             // Get the thread info
             void* infoPtr = &info; // info is already fixed
-            var returnLength = IntPtr.Zero;
-            var ret = NativeMethods.NtQueryInformationThread(threadHandle,
-                ThreadInformationClass.ThreadBasicInformation, infoPtr, MarshalType<ThreadBasicInformation>.SizeAsPointer,
-                ref returnLength);
+            var ret = NativeMethods.NtQueryInformationThread(threadHandle, ThreadInformationClass.ThreadBasicInformation,
+                infoPtr, MarshalType<ThreadBasicInformation>.SizeAsPointer, out IntPtr returnLength);
 
             // If the function succeeded
             if (ret == 0)
@@ -191,9 +189,8 @@ namespace Binarysharp.MemoryManagement.Threading
 
             // Get the thread info
             ulong info = 0;
-            var returnLength = IntPtr.Zero;
-            var ret = NativeMethods.NtQueryInformationThread(threadHandle,
-                ThreadInformationClass.ThreadBasicInformation, &info, new IntPtr(IntPtr.Size), ref returnLength);
+            var ret = NativeMethods.NtQueryInformationThread(threadHandle, ThreadInformationClass.ThreadBasicInformation,
+                &info, new IntPtr(sizeof(ulong)), out IntPtr returnLength);
 
             // If the function succeeded
             if (ret == 0)
