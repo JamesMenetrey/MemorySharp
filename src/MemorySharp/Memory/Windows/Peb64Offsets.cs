@@ -7,7 +7,7 @@
     /// The definition of the PREB has been found on the terminus project:
     /// http://terminus.rewolf.pl/terminus/structures/ntdll/_PEB_combined.html.
     /// </remarks>
-    internal class Peb64Offsets : PebOffsets
+    internal class Peb64Offsets : IPebOffsets
     {
         public int InheritedAddressSpace => 0x0;
         public int ReadImageFileExecOptions => 0x1;

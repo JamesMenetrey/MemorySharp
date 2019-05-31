@@ -1,6 +1,6 @@
 ﻿namespace Binarysharp.MemoryManagement.Memory.Windows
 {
-    internal interface PebOffsets
+    internal interface IPebOffsets
     {
         int InheritedAddressSpace { get; }
         int ReadImageFileExecOptions { get; }

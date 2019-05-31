@@ -124,7 +124,7 @@
     <Compile Include="Memory\RemotePointer.cs" />
     <Compile Include="Memory\Windows\Peb32Offsets.cs" />
     <Compile Include="Memory\Windows\Peb64Offsets.cs" />
-    <Compile Include="Memory\Windows\PebOffsets.cs" />
+    <Compile Include="Memory\Windows\IPebOffsets.cs" />
     <Compile Include="Modules\InjectedModule.cs" />
     <Compile Include="Native\ManagedPeb.cs" />
     <Compile Include="Threading\Windows\ManagedTeb.cs" />
@@ -142,7 +142,6 @@
     <Compile Include="Threading\RemoteThread.cs" />
     <Compile Include="Threading\ThreadCore.cs" />
     <Compile Include="Threading\ThreadFactory.cs" />
-    <Compile Include="Threading\Windows\Teb.cs" />
     <Compile Include="Threading\Windows\Teb32Offsets.cs" />
     <Compile Include="Threading\Windows\Teb64Offsets.cs" />
     <Compile Include="Threading\Windows\ITebOffsets.cs" />

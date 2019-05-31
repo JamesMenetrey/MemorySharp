@@ -23,7 +23,7 @@ namespace Binarysharp.MemoryManagement.Native
         /// <summary>
         /// The offsets of the process environment block for a given architecture.
         /// </summary>
-        private readonly PebOffsets _offsets;
+        private readonly IPebOffsets _offsets;
         #endregion Fields
 
         #region Properties
@@ -348,7 +348,7 @@ namespace Binarysharp.MemoryManagement.Native
         internal ManagedPeb(MemorySharp memorySharp) : base(memorySharp, FindPeb(memorySharp.Handle))
         {
             _offsets = memorySharp.Is64Process
-                ? (PebOffsets) Singleton<Peb64Offsets>.Instance
+                ? (IPebOffsets) Singleton<Peb64Offsets>.Instance
                 : Singleton<Peb32Offsets>.Instance;
         }
         #endregion Constructor
