@@ -205,5 +205,23 @@ namespace MemorySharpTests
             // Assert
             Assert.IsFalse(ret);
         }
+
+        [TestMethod]
+        public void Peb_ShouldReturnTheOsVersion()
+        {
+            // Arrange
+            var peb = Resources.MemorySharp.Peb;
+            var version = Environment.OSVersion.Version;
+
+            // Act
+            var pebMajorVersion = peb.OsMajorVersion;
+            var pebMinorVersion = peb.OsMinorVersion;
+            var pebBuildNumber = peb.OsBuildNumber;
+
+            // Assert
+            Assert.AreEqual(version.Major, (int)pebMajorVersion);
+            Assert.AreEqual(version.Minor, (int)pebMinorVersion);
+            Assert.AreEqual(version.Build, (int)pebBuildNumber);
+        }
     }
 }

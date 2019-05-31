@@ -122,6 +122,9 @@
     <Compile Include="Memory\MemoryProtection.cs" />
     <Compile Include="Memory\RemoteRegion.cs" />
     <Compile Include="Memory\RemotePointer.cs" />
+    <Compile Include="Memory\Windows\Peb32Offsets.cs" />
+    <Compile Include="Memory\Windows\Peb64Offsets.cs" />
+    <Compile Include="Memory\Windows\PebOffsets.cs" />
     <Compile Include="Modules\InjectedModule.cs" />
     <Compile Include="Native\ManagedPeb.cs" />
     <Compile Include="Native\ManagedTeb.cs" />

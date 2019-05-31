@@ -6,8 +6,11 @@
  * This library is released under the MIT License.
  * See the file LICENSE for more information.
 */
+
 using System;
+using Binarysharp.MemoryManagement.Helpers;
 using Binarysharp.MemoryManagement.Memory;
+using Binarysharp.MemoryManagement.Memory.Windows;
 
 namespace Binarysharp.MemoryManagement.Native
 {
@@ -16,349 +19,350 @@ namespace Binarysharp.MemoryManagement.Native
     /// </summary>
     public class ManagedPeb : RemotePointer
     {
+        #region Fields
+        /// <summary>
+        /// The offsets of the process environment block for a given architecture.
+        /// </summary>
+        private readonly PebOffsets _offsets;
+        #endregion Fields
+
         #region Properties
         public byte InheritedAddressSpace
         {
-            get { return Read<byte>(PebStructure.InheritedAddressSpace); }
-            set { Write(PebStructure.InheritedAddressSpace, value); }
+            get => Read<byte>(_offsets.InheritedAddressSpace);
+            set => Write(_offsets.InheritedAddressSpace, value);
         }
+
         public byte ReadImageFileExecOptions
         {
-            get { return Read<byte>(PebStructure.ReadImageFileExecOptions); }
-            set { Write(PebStructure.ReadImageFileExecOptions, value); }
+            get => Read<byte>(_offsets.ReadImageFileExecOptions);
+            set => Write(_offsets.ReadImageFileExecOptions, value);
         }
-        public bool BeingDebugged
+
+        public byte BeingDebugged
         {
-            get { return Read<bool>(PebStructure.BeingDebugged); }
-            set { Write(PebStructure.BeingDebugged, value); }
+            get => Read<byte>(_offsets.BeingDebugged);
+            set => Write(_offsets.BeingDebugged, value);
         }
-        public byte SpareBool
-        {
-            get { return Read<byte>(PebStructure.SpareBool); }
-            set { Write(PebStructure.SpareBool, value); }
-        }
+
         public IntPtr Mutant
         {
-            get { return Read<IntPtr>(PebStructure.Mutant); }
-            set { Write(PebStructure.Mutant, value); }
+            get => Read<IntPtr>(_offsets.Mutant);
+            set => Write(_offsets.Mutant, value);
         }
+
+        public IntPtr ImageBaseAddress
+        {
+            get => Read<IntPtr>(_offsets.ImageBaseAddress);
+            set => Write(_offsets.ImageBaseAddress, value);
+        }
+
         public IntPtr Ldr
         {
-            get { return Read<IntPtr>(PebStructure.Ldr); }
-            set { Write(PebStructure.Ldr, value); }
+            get => Read<IntPtr>(_offsets.Ldr);
+            set => Write(_offsets.Ldr, value);
         }
+
         public IntPtr ProcessParameters
         {
-            get { return Read<IntPtr>(PebStructure.ProcessParameters); }
-            set { Write(PebStructure.ProcessParameters, value); }
+            get => Read<IntPtr>(_offsets.ProcessParameters);
+            set => Write(_offsets.ProcessParameters, value);
         }
+
         public IntPtr SubSystemData
         {
-            get { return Read<IntPtr>(PebStructure.SubSystemData); }
-            set { Write(PebStructure.SubSystemData, value); }
+            get => Read<IntPtr>(_offsets.SubSystemData);
+            set => Write(_offsets.SubSystemData, value);
         }
+
         public IntPtr ProcessHeap
         {
-            get { return Read<IntPtr>(PebStructure.ProcessHeap); }
-            set { Write(PebStructure.ProcessHeap, value); }
+            get => Read<IntPtr>(_offsets.ProcessHeap);
+            set => Write(_offsets.ProcessHeap, value);
         }
+
         public IntPtr FastPebLock
         {
-            get { return Read<IntPtr>(PebStructure.FastPebLock); }
-            set { Write(PebStructure.FastPebLock, value); }
+            get => Read<IntPtr>(_offsets.FastPebLock);
+            set => Write(_offsets.FastPebLock, value);
         }
-        public IntPtr FastPebLockRoutine
+
+        public uint TlsExpansionCounter
         {
-            get { return Read<IntPtr>(PebStructure.FastPebLockRoutine); }
-            set { Write(PebStructure.FastPebLockRoutine, value); }
+            get => Read<uint>(_offsets.TlsExpansionCounter);
+            set => Write(_offsets.TlsExpansionCounter, value);
         }
-        public IntPtr FastPebUnlockRoutine
-        {
-            get { return Read<IntPtr>(PebStructure.FastPebUnlockRoutine); }
-            set { Write(PebStructure.FastPebUnlockRoutine, value); }
-        }
-        public IntPtr EnvironmentUpdateCount
-        {
-            get { return Read<IntPtr>(PebStructure.EnvironmentUpdateCount); }
-            set { Write(PebStructure.EnvironmentUpdateCount, value); }
-        }
-        public IntPtr KernelCallbackTable
-        {
-            get { return Read<IntPtr>(PebStructure.KernelCallbackTable); }
-            set { Write(PebStructure.KernelCallbackTable, value); }
-        }
-        public int SystemReserved
-        {
-            get { return Read<int>(PebStructure.SystemReserved); }
-            set { Write(PebStructure.SystemReserved, value); }
-        }
-        public int AtlThunkSListPtr32
-        {
-            get { return Read<int>(PebStructure.AtlThunkSListPtr32); }
-            set { Write(PebStructure.AtlThunkSListPtr32, value); }
-        }
-        public IntPtr FreeList
-        {
-            get { return Read<IntPtr>(PebStructure.FreeList); }
-            set { Write(PebStructure.FreeList, value); }
-        }
-        public IntPtr TlsExpansionCounter
-        {
-            get { return Read<IntPtr>(PebStructure.TlsExpansionCounter); }
-            set { Write(PebStructure.TlsExpansionCounter, value); }
-        }
+
         public IntPtr TlsBitmap
         {
-            get { return Read<IntPtr>(PebStructure.TlsBitmap); }
-            set { Write(PebStructure.TlsBitmap, value); }
+            get => Read<IntPtr>(_offsets.TlsBitmap);
+            set => Write(_offsets.TlsBitmap, value);
         }
+
         public long TlsBitmapBits
         {
-            get { return Read<long>(PebStructure.TlsBitmapBits); }
-            set { Write(PebStructure.TlsBitmapBits, value); }
+            get => Read<long>(_offsets.TlsBitmapBits);
+            set => Write(_offsets.TlsBitmapBits, value);
         }
+
         public IntPtr ReadOnlySharedMemoryBase
         {
-            get { return Read<IntPtr>(PebStructure.ReadOnlySharedMemoryBase); }
-            set { Write(PebStructure.ReadOnlySharedMemoryBase, value); }
+            get => Read<IntPtr>(_offsets.ReadOnlySharedMemoryBase);
+            set => Write(_offsets.ReadOnlySharedMemoryBase, value);
         }
-        public IntPtr ReadOnlySharedMemoryHeap
-        {
-            get { return Read<IntPtr>(PebStructure.ReadOnlySharedMemoryHeap); }
-            set { Write(PebStructure.ReadOnlySharedMemoryHeap, value); }
-        }
+
         public IntPtr ReadOnlyStaticServerData
         {
-            get { return Read<IntPtr>(PebStructure.ReadOnlyStaticServerData); }
-            set { Write(PebStructure.ReadOnlyStaticServerData, value); }
+            get => Read<IntPtr>(_offsets.ReadOnlyStaticServerData);
+            set => Write(_offsets.ReadOnlyStaticServerData, value);
         }
+
         public IntPtr AnsiCodePageData
         {
-            get { return Read<IntPtr>(PebStructure.AnsiCodePageData); }
-            set { Write(PebStructure.AnsiCodePageData, value); }
+            get => Read<IntPtr>(_offsets.AnsiCodePageData);
+            set => Write(_offsets.AnsiCodePageData, value);
         }
+
         public IntPtr OemCodePageData
         {
-            get { return Read<IntPtr>(PebStructure.OemCodePageData); }
-            set { Write(PebStructure.OemCodePageData, value); }
+            get => Read<IntPtr>(_offsets.OemCodePageData);
+            set => Write(_offsets.OemCodePageData, value);
         }
+
         public IntPtr UnicodeCaseTableData
         {
-            get { return Read<IntPtr>(PebStructure.UnicodeCaseTableData); }
-            set { Write(PebStructure.UnicodeCaseTableData, value); }
+            get => Read<IntPtr>(_offsets.UnicodeCaseTableData);
+            set => Write(_offsets.UnicodeCaseTableData, value);
         }
-        public int NumberOfProcessors
+
+        public uint NumberOfProcessors
         {
-            get { return Read<int>(PebStructure.NumberOfProcessors); }
-            set { Write(PebStructure.NumberOfProcessors, value); }
+            get => Read<uint>(_offsets.NumberOfProcessors);
+            set => Write(_offsets.NumberOfProcessors, value);
         }
-        public long NtGlobalFlag
+
+        public uint NtGlobalFlag
         {
-            get { return Read<long>(PebStructure.NtGlobalFlag); }
-            set { Write(PebStructure.NtGlobalFlag, value); }
+            get => Read<uint>(_offsets.NtGlobalFlag);
+            set => Write(_offsets.NtGlobalFlag, value);
         }
+
         public long CriticalSectionTimeout
         {
-            get { return Read<long>(PebStructure.CriticalSectionTimeout); }
-            set { Write(PebStructure.CriticalSectionTimeout, value); }
+            get => Read<long>(_offsets.CriticalSectionTimeout);
+            set => Write(_offsets.CriticalSectionTimeout, value);
         }
+
         public IntPtr HeapSegmentReserve
         {
-            get { return Read<IntPtr>(PebStructure.HeapSegmentReserve); }
-            set { Write(PebStructure.HeapSegmentReserve, value); }
+            get => Read<IntPtr>(_offsets.HeapSegmentReserve);
+            set => Write(_offsets.HeapSegmentReserve, value);
         }
+
         public IntPtr HeapSegmentCommit
         {
-            get { return Read<IntPtr>(PebStructure.HeapSegmentCommit); }
-            set { Write(PebStructure.HeapSegmentCommit, value); }
+            get => Read<IntPtr>(_offsets.HeapSegmentCommit);
+            set => Write(_offsets.HeapSegmentCommit, value);
         }
+
         public IntPtr HeapDeCommitTotalFreeThreshold
         {
-            get { return Read<IntPtr>(PebStructure.HeapDeCommitTotalFreeThreshold); }
-            set { Write(PebStructure.HeapDeCommitTotalFreeThreshold, value); }
+            get => Read<IntPtr>(_offsets.HeapDeCommitTotalFreeThreshold);
+            set => Write(_offsets.HeapDeCommitTotalFreeThreshold, value);
         }
+
         public IntPtr HeapDeCommitFreeBlockThreshold
         {
-            get { return Read<IntPtr>(PebStructure.HeapDeCommitFreeBlockThreshold); }
-            set { Write(PebStructure.HeapDeCommitFreeBlockThreshold, value); }
+            get => Read<IntPtr>(_offsets.HeapDeCommitFreeBlockThreshold);
+            set => Write(_offsets.HeapDeCommitFreeBlockThreshold, value);
         }
-        public int NumberOfHeaps
+
+        public uint NumberOfHeaps
         {
-            get { return Read<int>(PebStructure.NumberOfHeaps); }
-            set { Write(PebStructure.NumberOfHeaps, value); }
+            get => Read<uint>(_offsets.NumberOfHeaps);
+            set => Write(_offsets.NumberOfHeaps, value);
         }
-        public int MaximumNumberOfHeaps
+
+        public uint MaximumNumberOfHeaps
         {
-            get { return Read<int>(PebStructure.MaximumNumberOfHeaps); }
-            set { Write(PebStructure.MaximumNumberOfHeaps, value); }
+            get => Read<uint>(_offsets.MaximumNumberOfHeaps);
+            set => Write(_offsets.MaximumNumberOfHeaps, value);
         }
+
         public IntPtr ProcessHeaps
         {
-            get { return Read<IntPtr>(PebStructure.ProcessHeaps); }
-            set { Write(PebStructure.ProcessHeaps, value); }
+            get => Read<IntPtr>(_offsets.ProcessHeaps);
+            set => Write(_offsets.ProcessHeaps, value);
         }
+
         public IntPtr GdiSharedHandleTable
         {
-            get { return Read<IntPtr>(PebStructure.GdiSharedHandleTable); }
-            set { Write(PebStructure.GdiSharedHandleTable, value); }
+            get => Read<IntPtr>(_offsets.GdiSharedHandleTable);
+            set => Write(_offsets.GdiSharedHandleTable, value);
         }
+
         public IntPtr ProcessStarterHelper
         {
-            get { return Read<IntPtr>(PebStructure.ProcessStarterHelper); }
-            set { Write(PebStructure.ProcessStarterHelper, value); }
+            get => Read<IntPtr>(_offsets.ProcessStarterHelper);
+            set => Write(_offsets.ProcessStarterHelper, value);
         }
-        public IntPtr GdiDcAttributeList
+
+        public uint GdiDcAttributeList
         {
-            get { return Read<IntPtr>(PebStructure.GdiDcAttributeList); }
-            set { Write(PebStructure.GdiDcAttributeList, value); }
+            get => Read<uint>(_offsets.GdiDcAttributeList);
+            set => Write(_offsets.GdiDcAttributeList, value);
         }
-        public IntPtr LoaderLock
+
+        public uint OsMajorVersion
         {
-            get { return Read<IntPtr>(PebStructure.LoaderLock); }
-            set { Write(PebStructure.LoaderLock, value); }
+            get => Read<uint>(_offsets.OsMajorVersion);
+            set => Write(_offsets.OsMajorVersion, value);
         }
-        public int OsMajorVersion
+
+        public uint OsMinorVersion
         {
-            get { return Read<int>(PebStructure.OsMajorVersion); }
-            set { Write(PebStructure.OsMajorVersion, value); }
+            get => Read<uint>(_offsets.OsMinorVersion);
+            set => Write(_offsets.OsMinorVersion, value);
         }
-        public int OsMinorVersion
-        {
-            get { return Read<int>(PebStructure.OsMinorVersion); }
-            set { Write(PebStructure.OsMinorVersion, value); }
-        }
+
         public ushort OsBuildNumber
         {
-            get { return Read<ushort>(PebStructure.OsBuildNumber); }
-            set { Write(PebStructure.OsBuildNumber, value); }
+            get => Read<ushort>(_offsets.OsBuildNumber);
+            set => Write(_offsets.OsBuildNumber, value);
         }
+
         public ushort OsCsdVersion
         {
-            get { return Read<ushort>(PebStructure.OsCsdVersion); }
-            set { Write(PebStructure.OsCsdVersion, value); }
+            get => Read<ushort>(_offsets.OsCsdVersion);
+            set => Write(_offsets.OsCsdVersion, value);
         }
-        public int OsPlatformId
+
+        public uint OsPlatformId
         {
-            get { return Read<int>(PebStructure.OsPlatformId); }
-            set { Write(PebStructure.OsPlatformId, value); }
+            get => Read<uint>(_offsets.OsPlatformId);
+            set => Write(_offsets.OsPlatformId, value);
         }
-        public int ImageSubsystem
+
+        public uint ImageSubsystem
         {
-            get { return Read<int>(PebStructure.ImageSubsystem); }
-            set { Write(PebStructure.ImageSubsystem, value); }
+            get => Read<uint>(_offsets.ImageSubsystem);
+            set => Write(_offsets.ImageSubsystem, value);
         }
-        public int ImageSubsystemMajorVersion
+
+        public uint ImageSubsystemMajorVersion
         {
-            get { return Read<int>(PebStructure.ImageSubsystemMajorVersion); }
-            set { Write(PebStructure.ImageSubsystemMajorVersion, value); }
+            get => Read<uint>(_offsets.ImageSubsystemMajorVersion);
+            set => Write(_offsets.ImageSubsystemMajorVersion, value);
         }
-        public IntPtr ImageSubsystemMinorVersion
+
+        public uint ImageSubsystemMinorVersion
         {
-            get { return Read<IntPtr>(PebStructure.ImageSubsystemMinorVersion); }
-            set { Write(PebStructure.ImageSubsystemMinorVersion, value); }
+            get => Read<uint>(_offsets.ImageSubsystemMinorVersion);
+            set => Write(_offsets.ImageSubsystemMinorVersion, value);
         }
-        public IntPtr ImageProcessAffinityMask
+
+        public uint[] GdiHandleBuffer
         {
-            get { return Read<IntPtr>(PebStructure.ImageProcessAffinityMask); }
-            set { Write(PebStructure.ImageProcessAffinityMask, value); }
+            get => Read<uint>(_offsets.GdiHandleBuffer, _offsets.GdiHandleBufferSize);
+            set => Write(_offsets.GdiHandleBuffer, value);
         }
-        public IntPtr[] GdiHandleBuffer
-        {
-            get { return Read<IntPtr>(PebStructure.GdiHandleBuffer, 0x22); }
-            set { Write(PebStructure.GdiHandleBuffer, value); }
-        }
+
         public IntPtr PostProcessInitRoutine
         {
-            get { return Read<IntPtr>(PebStructure.PostProcessInitRoutine); }
-            set { Write(PebStructure.PostProcessInitRoutine, value); }
+            get => Read<IntPtr>(_offsets.PostProcessInitRoutine);
+            set => Write(_offsets.PostProcessInitRoutine, value);
         }
+
         public IntPtr TlsExpansionBitmap
         {
-            get { return Read<IntPtr>(PebStructure.TlsExpansionBitmap); }
-            set { Write(PebStructure.TlsExpansionBitmap, value); }
+            get => Read<IntPtr>(_offsets.TlsExpansionBitmap);
+            set => Write(_offsets.TlsExpansionBitmap, value);
         }
-        public IntPtr[] TlsExpansionBitmapBits
+
+        public uint[] TlsExpansionBitmapBits
         {
-            get { return Read<IntPtr>(PebStructure.TlsExpansionBitmapBits, 0x20); }
-            set { Write(PebStructure.TlsExpansionBitmapBits, value); }
+            get => Read<uint>(_offsets.TlsExpansionBitmapBits, _offsets.TlsExpansionBitmapBitsSize);
+            set => Write(_offsets.TlsExpansionBitmapBits, value);
         }
-        public IntPtr SessionId
+
+        public uint SessionId
         {
-            get { return Read<IntPtr>(PebStructure.SessionId); }
-            set { Write(PebStructure.SessionId, value); }
+            get => Read<uint>(_offsets.SessionId);
+            set => Write(_offsets.SessionId, value);
         }
+
         public long AppCompatFlags
         {
-            get { return Read<long>(PebStructure.AppCompatFlags); }
-            set { Write(PebStructure.AppCompatFlags, value); }
+            get => Read<long>(_offsets.AppCompatFlags);
+            set => Write(_offsets.AppCompatFlags, value);
         }
+
         public long AppCompatFlagsUser
         {
-            get { return Read<long>(PebStructure.AppCompatFlagsUser); }
-            set { Write(PebStructure.AppCompatFlagsUser, value); }
+            get => Read<long>(_offsets.AppCompatFlagsUser);
+            set => Write(_offsets.AppCompatFlagsUser, value);
         }
+
         public IntPtr ShimData
         {
-            get { return Read<IntPtr>(PebStructure.ShimData); }
-            set { Write(PebStructure.ShimData, value); }
+            get => Read<IntPtr>(_offsets.ShimData);
+            set => Write(_offsets.ShimData, value);
         }
+
         public IntPtr AppCompatInfo
         {
-            get { return Read<IntPtr>(PebStructure.AppCompatInfo); }
-            set { Write(PebStructure.AppCompatInfo, value); }
+            get => Read<IntPtr>(_offsets.AppCompatInfo);
+            set => Write(_offsets.AppCompatInfo, value);
         }
-        public long CsdVersion
+
+        public ushort CsdVersionLength
         {
-            get { return Read<long>(PebStructure.CsdVersion); }
-            set { Write(PebStructure.CsdVersion, value); }
+            get => Read<ushort>(_offsets.CsdVersionLength);
+            set => Write(_offsets.CsdVersionLength, value);
         }
-        public IntPtr ActivationContextData
+
+        public ushort CsdVersionMaxLength
         {
-            get { return Read<IntPtr>(PebStructure.ActivationContextData); }
-            set { Write(PebStructure.ActivationContextData, value); }
+            get => Read<ushort>(_offsets.CsdVersionMaxLength);
+            set => Write(_offsets.CsdVersionMaxLength, value);
         }
-        public IntPtr ProcessAssemblyStorageMap
+
+        public IntPtr CsdVersionBuffer
         {
-            get { return Read<IntPtr>(PebStructure.ProcessAssemblyStorageMap); }
-            set { Write(PebStructure.ProcessAssemblyStorageMap, value); }
+            get => Read<IntPtr>(_offsets.CsdVersionBuffer);
+            set => Write(_offsets.CsdVersionBuffer, value);
         }
-        public IntPtr SystemDefaultActivationContextData
-        {
-            get { return Read<IntPtr>(PebStructure.SystemDefaultActivationContextData); }
-            set { Write(PebStructure.SystemDefaultActivationContextData, value); }
-        }
-        public IntPtr SystemAssemblyStorageMap
-        {
-            get { return Read<IntPtr>(PebStructure.SystemAssemblyStorageMap); }
-            set { Write(PebStructure.SystemAssemblyStorageMap, value); }
-        }
+
         public IntPtr MinimumStackCommit
         {
-            get { return Read<IntPtr>(PebStructure.MinimumStackCommit); }
-            set { Write(PebStructure.MinimumStackCommit, value); }
+            get => Read<IntPtr>(_offsets.MinimumStackCommit);
+            set => Write(_offsets.MinimumStackCommit, value);
         }
-        #endregion
+        #endregion Properties
 
         #region Constructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="ManagedPeb"/> class.
+        /// Initializes a new instance of the <see cref="ManagedPeb" /> class.
         /// </summary>
-        /// <param name="memorySharp">The reference of the <see cref="MemorySharp"/> object.</param>
-        /// <param name="address">The location of the peb.</param>
-        internal ManagedPeb(MemorySharp memorySharp, IntPtr address) : base(memorySharp, address)
-        {}
-        #endregion
+        /// <param name="memorySharp">The reference of the <see cref="MemorySharp" /> object.</param>
+        internal ManagedPeb(MemorySharp memorySharp) : base(memorySharp, FindPeb(memorySharp.Handle))
+        {
+            _offsets = memorySharp.Is64Process
+                ? (PebOffsets) Singleton<Peb64Offsets>.Instance
+                : Singleton<Peb32Offsets>.Instance;
+        }
+        #endregion Constructor
 
         #region Methods
         /// <summary>
         /// Finds the Process Environment Block address of a specified process.
         /// </summary>
         /// <param name="processHandle">A handle of the process.</param>
-        /// <returns>A <see cref="IntPtr"/> pointer of the PEB.</returns>
+        /// <returns>A <see cref="IntPtr" /> pointer of the PEB.</returns>
         public static IntPtr FindPeb(SafeMemoryHandle processHandle)
         {
             return MemoryCore.NtQueryInformationProcess(processHandle).PebBaseAddress;
         }
-        #endregion
+        #endregion Methods
     }
 }

@@ -39,9 +39,13 @@ namespace Binarysharp.MemoryManagement
         /// </summary>
         protected readonly List<IFactory> Factories;
         /// <summary>
-        /// The internal field that stores lazy evaluation fo the architecture of the process.
+        /// The internal field that stores the lazy evaluation for the architecture of the process.
         /// </summary>
         private readonly Lazy<bool> _is64Process;
+        /// <summary>
+        /// The internal field that stores the lazy evaluation for the managed process environment block.
+        /// </summary>
+        private readonly Lazy<ManagedPeb> _managedPeb;
         #endregion
 
         #region Properties
@@ -63,8 +67,8 @@ namespace Binarysharp.MemoryManagement
         /// </summary>
         public bool IsDebugged
         {
-            get { return Peb.BeingDebugged; }
-            set { Peb.BeingDebugged = value; }
+            get => Peb.BeingDebugged == 1;
+            set => Peb.BeingDebugged = value ? (byte) 1 : (byte) 0;
         }
         #endregion
         #region IsRunning
@@ -104,7 +108,7 @@ namespace Binarysharp.MemoryManagement
         /// <summary>
         /// The Process Environment Block of the process.
         /// </summary>
-        public ManagedPeb Peb { get; private set; }
+        public ManagedPeb Peb => _managedPeb.Value;
         #endregion
         #region Pid
         /// <summary>
@@ -167,7 +171,7 @@ namespace Binarysharp.MemoryManagement
             _is64Process = new Lazy<bool>(() => ArchitectureDetector.Is64Process(Handle));
 
             // Initialize the PEB
-            Peb = new ManagedPeb(this, ManagedPeb.FindPeb(Handle));
+            _managedPeb = new Lazy<ManagedPeb>(() => new ManagedPeb(this));
 
             // Create instances of the factories
             Factories = new List<IFactory>();

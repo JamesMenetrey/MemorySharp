@@ -21,6 +21,9 @@ namespace Binarysharp.MemoryManagement.Native
     public class ManagedTeb : RemotePointer
     {
         #region Fields
+        /// <summary>
+        /// The offsets of the thread environment block for a given architecture.
+        /// </summary>
         private readonly TebOffsets _offsets;
         #endregion Fields
 
