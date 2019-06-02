@@ -32,25 +32,22 @@ namespace Binarysharp.MemoryManagement.Helpers
             where T : unmanaged
         {
             // The worst case is that the alignment is only possible after the alignment value itself
-            var memoryToAllocate = alignment + sizeof(T);
+            var memoryToAllocate = alignment + sizeof(T) - 1;
 
             // Allocate the memory on the stack
             var memory = stackalloc byte[memoryToAllocate];
 
-            // Compute the current offset in the ring of integers modulo the alignment
-            var alignmentOffset = (long)memory % alignment;
+            // Determine the offset between the allocated address and the aligned address
+            var offset = (long)memory & alignment - 1;
 
-            // If the offset is congruent to zero, no computation is needed,
-            // otherwise the complement of the alignment is added to the memory address.
-            var alignedMemory = alignmentOffset != 0
-                ? memory + alignment - alignmentOffset
-                : memory;
+            // If there is an offset, relocate the pointer to the aligned address
+            if (offset != 0) memory += alignment - offset;
 
             // Perform some black magic pointer manipulations..
             // No just kidding, reinterpret the aligned memory address as the structure,
             // the ref keywords are here to prevent the structure ot be copied, as a structure
             // assignment is equal to a copy in C#.
-            ref var s = ref *(T*)alignedMemory;
+            ref var s = ref *(T*)memory;
 
             // Call the callback with the aligned structure
             action(ref s);
