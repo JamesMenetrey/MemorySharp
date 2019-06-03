@@ -29,7 +29,8 @@ namespace Binarysharp.MemoryManagement.Assembly.Assembler
         #region Constructor
 
         /// <summary>
-        /// Creates a new instance of the assembler and choose the same mode as the current process.
+        /// Creates a new instance of the assembler.
+        /// The instruction set matches the architecture of the target process.
         /// </summary>
         public KeystoneAssembler(InstructionSet instructionSet)
         {

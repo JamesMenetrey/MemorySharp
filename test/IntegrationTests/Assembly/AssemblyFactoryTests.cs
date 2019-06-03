@@ -116,7 +116,7 @@ namespace MemorySharpTests.Assembly
         /// Writes some mnemonics and execute them.
         /// </summary>
         [TestMethod]
-        public void Execute()
+        public void Execute_ShouldExecuteX86()
         {
             // Arrange
             var sharp = Resources.MemorySharp;
@@ -138,5 +138,35 @@ namespace MemorySharpTests.Assembly
 
             Resources.EndTests(sharp);
         }
+
+#if x64
+        /// <summary>
+        /// Writes some mnemonics and execute them.
+        /// </summary>
+        [TestMethod]
+        public void Execute_ShouldExecuteX64()
+        {
+            // Arrange
+            var sharp = Resources.MemorySharp;
+            long value = 0x66;
+
+            // Act
+            using (var memory = sharp.Memory.Allocate(1))
+            {
+                using (var t = sharp.Assembly.BeginTransaction(memory.BaseAddress))
+                {
+                    t.AddLine("mov rax, " + value);
+                    t.AddLine("ret");
+                }
+
+                var ret = memory.Execute<long>();
+
+                // Assert
+                Assert.AreEqual(value, ret, "The return value is incorrect.");
+            }
+
+            Resources.EndTests(sharp);
+        }
+#endif
     }
 }

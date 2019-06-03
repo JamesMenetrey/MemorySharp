@@ -27,14 +27,22 @@ namespace Binarysharp.MemoryManagement.Assembly
         /// The reference of the <see cref="MemorySharp"/> object.
         /// </summary>
         protected readonly MemorySharp MemorySharp;
+        /// <summary>
+        /// The internal field that stores the lazy evaluation for the assembler.
+        /// </summary>
+        private Lazy<IAssembler> _assembler;
         #endregion
 
         #region Properties
         #region Assembler
         /// <summary>
-        /// The assembler used by the factory.
+        /// Gets or sets the assembler used by the factory.
         /// </summary>
-        public IAssembler Assembler { get; set; }
+        public IAssembler Assembler
+        {
+            get => _assembler.Value;
+            set => _assembler = new Lazy<IAssembler>(() => value);
+        }
         #endregion
         #endregion
 
@@ -48,13 +56,12 @@ namespace Binarysharp.MemoryManagement.Assembly
             // Save the parameter
             MemorySharp = memorySharp;
 
-            // Create the tool
-            // TODO Determine dynamically the instruction set from the target process
-            Assembler = new KeystoneAssembler(InstructionSet.X86);
+            // Create the default assembler lazily
+            _assembler = new Lazy<IAssembler>(CreateDefaultAssembler);
         }
         #endregion
 
-        #region Methods
+        #region Public methods
         #region BeginTransaction
         /// <summary>
         /// Begins a new transaction to inject and execute assembly code into the process at the specified address.
@@ -353,6 +360,22 @@ namespace Binarysharp.MemoryManagement.Assembly
         public Task<IntPtr> InjectAndExecuteAsync(string[] instructions)
         {
             return InjectAndExecuteAsync<IntPtr>(instructions);
+        }
+        #endregion
+        #endregion
+
+        #region Private methods
+        #region CreateDefaultAssembler
+        /// <summary>
+        /// Creates the default assembler proposed by the library.
+        /// </summary>
+        private IAssembler CreateDefaultAssembler()
+        {
+            var instructionSet = MemorySharp.Is64Process
+                ? InstructionSet.X64
+                : InstructionSet.X86;
+
+            return new KeystoneAssembler(instructionSet);
         }
         #endregion
         #endregion
