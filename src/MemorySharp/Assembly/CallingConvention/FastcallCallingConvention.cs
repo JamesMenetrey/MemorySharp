@@ -8,77 +8,56 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Binarysharp.MemoryManagement.Assembly.CallingConvention
 {
     /// <summary>
-    /// Define the Fast Calling Convention (aka __msfastcall).
+    /// Define the Fast Calling Convention.
     /// </summary>
+    /// <remarks>
+    /// This is Microsoft or GCC __fastcall convention (aka __msfastcall).
+    /// The two first parameters are stored in the registers ECX and EDX.
+    /// The remaining parameter are pushed on the stack in the right-to-left order. The callee cleans the arguments from the stack.
+    /// The return value is stored in the register EAX.
+    /// </remarks>
     public class FastcallCallingConvention : ICallingConvention
     {
         /// <summary>
-        /// The name of the calling convention.
+        /// Formats a call to a function pointer.
         /// </summary>
-        public string Name
+        /// <param name="function">The function pointer.</param>
+        /// <param name="parameters">The pointer of the parameters.</param>
+        /// <param name="instructions">The list that receives the assembly instructions.</param>
+        /// <remarks>
+        /// The two first parameters (left-to-right) are stored in the registers ECX and EDX.
+        /// The remaining parameter are pushed on the stack in the right-to-left order. The callee cleans the arguments from the stack.
+        /// The return value is stored in the register EAX.
+        /// </remarks>
+        public void FormatCall(IntPtr function, IntPtr[] parameters, List<string> instructions)
         {
-            get { return "Fastcall"; }
-        }
-        /// <summary>
-        /// Defines which function performs the clean-up task.
-        /// </summary>
-        public CleanupTypes Cleanup
-        {
-            get { return CleanupTypes.Callee; }
-        }
-        /// <summary>
-        /// Formats the given parameters to call a function.
-        /// </summary>
-        /// <param name="parameters">An array of parameters.</param>
-        /// <returns>The mnemonics to pass the parameters.</returns>
-        public string FormatParameters(IntPtr[] parameters)
-        {
-            // Declare a var to store the mnemonics
-            var ret = new StringBuilder();
-            var paramList = new List<IntPtr>(parameters);
-            // Store the first parameter in the ECX register
-            if (paramList.Count > 0)
+            // Set up the parameters
+            // The first 2 are stored in registers
+            switch (parameters.Length)
             {
-                ret.AppendLine("mov ecx, " + paramList[0]);
-                paramList.RemoveAt(0);
+                default:
+                    instructions.Add("mov edx, " + parameters[1]);
+                    goto case 1;
+                case 1:
+                    instructions.Add("mov ecx, " + parameters[0]);
+                    break;
+                case 0:
+                    break;
             }
-            // Store the second parameter in the EDX register
-            if (paramList.Count > 0)
+
+            // The remaining parameters are pushed onto the stack in right-to-left order
+            foreach (var parameter in parameters.Skip(2).Reverse())
             {
-                ret.AppendLine("mov edx, " + paramList[0]);
-                paramList.RemoveAt(0);
+                instructions.Add("push " + parameter);
             }
-            // For each parameters (in reverse order)
-            paramList.Reverse();
-            foreach (var parameter in paramList)
-            {
-                ret.AppendLine("push " + parameter);
-            }
-            // Return the mnemonics
-            return ret.ToString();
-        }
-        /// <summary>
-        /// Formats the call of a given function.
-        /// </summary>
-        /// <param name="function">The function to call.</param>
-        /// <returns>The mnemonics to call the function.</returns>
-        public string FormatCalling(IntPtr function)
-        {
-            return "call " + function;
-        }
-        /// <summary>
-        /// Formats the cleaning of a given number of parameters.
-        /// </summary>
-        /// <param name="nbParameters">The number of parameters to clean.</param>
-        /// <returns>The mnemonics to clean a given number of parameters.</returns>
-        public string FormatCleaning(int nbParameters)
-        {
-            return String.Empty;
+
+            // Call the function
+            instructions.Add("call " + function);
         }
     }
 }

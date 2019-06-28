@@ -91,7 +91,9 @@
     <Compile Include="Assembly\AssemblyTransaction.cs" />
     <Compile Include="Assembly\CallingConvention\CallingConventionSelector.cs" />
     <Compile Include="Assembly\CallingConvention\CdeclCallingConvention.cs" />
-    <Compile Include="Assembly\CallingConvention\ThiscallCallingConvention.cs" />
+    <Compile Include="Assembly\CallingConvention\MicrosoftThiscallCallingConvention.cs" />
+    <Compile Include="Assembly\CallingConvention\MicrosoftX64CallingConvention.cs" />
+    <Compile Include="Assembly\CallingConvention\GccThiscallCallingConvention.cs" />
     <Compile Include="Assembly\CallingConvention\FastcallCallingConvention.cs" />
     <Compile Include="Assembly\CallingConvention\StdcallCallingConvention.cs" />
     <Compile Include="Assembly\CallingConvention\ICallingConvention.cs" />

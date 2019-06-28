@@ -26,7 +26,7 @@ namespace Binarysharp.MemoryManagement.Assembly
         /// <summary>
         /// The builder contains all the instructions inserted by the user.
         /// </summary>
-        protected List<string> Instructions;
+        public readonly List<string> Instructions;
         /// <summary>
         /// The exit code of the thread created to execute the assembly code.
         /// </summary>
@@ -76,17 +76,6 @@ namespace Binarysharp.MemoryManagement.Assembly
         #endregion
 
         #region Methods
-        #region AddLine
-        /// <summary>
-        /// Adds a mnemonic to the transaction.
-        /// </summary>
-        /// <param name="asm">A composite format string.</param>
-        /// <param name="args">An object array that contains zero or more objects to format.</param>
-        public void AddLine(string asm, params object[] args)
-        {
-            Instructions.Add(string.Format(asm, args));
-        }
-        #endregion
         #region Assemble
         /// <summary>
         /// Assemble the assembly code of this transaction.
@@ -95,15 +84,6 @@ namespace Binarysharp.MemoryManagement.Assembly
         public byte[] Assemble()
         {
             return MemorySharp.Assembly.Assembler.Assemble(Instructions);
-        }
-        #endregion
-        #region Clear
-        /// <summary>
-        /// Removes all mnemonics from the transaction.
-        /// </summary>
-        public void Clear()
-        {
-            Instructions.Clear();
         }
         #endregion
         #region Dispose (implementation of IDisposable)
@@ -141,18 +121,6 @@ namespace Binarysharp.MemoryManagement.Assembly
         public T GetExitCode<T>()
         {
             return MarshalType<T>.PtrToObject(MemorySharp, ExitCode);
-        }
-        #endregion
-        #region InsertLine
-        /// <summary>
-        /// Inserts a mnemonic to the transaction at a given index.
-        /// </summary>
-        /// <param name="index">The position in the transaction where insertion begins.</param>
-        /// <param name="asm">A composite format string.</param>
-        /// <param name="args">An object array that contains zero or more objects to format.</param>
-        public void InsertLine(int index, string asm, params object[] args)
-        {
-            Instructions.Insert(index, string.Format(asm, args));
         }
         #endregion
         #endregion

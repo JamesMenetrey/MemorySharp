@@ -40,13 +40,31 @@ namespace Binarysharp.MemoryManagement.Assembly.CallingConvention
         Fastcall,
         /// <summary>
         /// Name       : This Calling Convention
+        /// Clean-up   : Caller
+        /// Parameters : The first parameter must be a pointer of the instance of the class.
+        ///              Parameters are placed on the stack in reverse order.
+        /// Ret. Value : Returned in the EAX register
+        /// Notes      : Used for object-oriented programming by GCC
+        /// </summary>
+        GccThiscall,
+        /// <summary>
+        /// Name       : This Calling Convention
         /// Clean-up   : Callee
         /// Parameters : The 'this' pointer is placed in the ECX register.
         ///              Parameters are placed on the stack in reverse order.
         /// Ret. Value : Returned in the EAX register
         /// Notes      : Used for object-oriented programming by Microsoft Visual C++
         /// </summary>
-        Thiscall
+        MicrosoftThiscall,
+        /// <summary>
+        /// Name       : Microsoft x64 Calling Convention
+        /// Clean-up   : Caller
+        /// Parameters : The four first parameters are stored (left-to-right) in the registers RCX, RDX, R8 and R9.
+        ///              The remaining parameter are pushed on the stack in the right-to-left order.
+        /// Ret. Value : Returned in the RAX register
+        /// Notes      : Convention used by all x64 programs on Windows
+        /// </summary>
+        MicrosoftX64
     }
 
     /// <summary>

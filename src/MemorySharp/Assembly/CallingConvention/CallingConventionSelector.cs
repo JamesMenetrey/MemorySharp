@@ -31,8 +31,12 @@ namespace Binarysharp.MemoryManagement.Assembly.CallingConvention
                     return Singleton<StdcallCallingConvention>.Instance;
                 case CallingConventions.Fastcall:
                     return Singleton<FastcallCallingConvention>.Instance;
-                case CallingConventions.Thiscall:
-                    return Singleton<ThiscallCallingConvention>.Instance;
+                case CallingConventions.GccThiscall:
+                    return Singleton<GccThiscallCallingConvention>.Instance;
+                case CallingConventions.MicrosoftThiscall:
+                    return Singleton<MicrosoftThiscallCallingConvention>.Instance;
+                case CallingConventions.MicrosoftX64:
+                    return Singleton<MicrosoftX64CallingConvention>.Instance;
                 default:
                     throw new ApplicationException("Unsupported calling convention.");
             }

@@ -154,15 +154,10 @@ namespace Binarysharp.MemoryManagement.Assembly
             {
                 // Get the object dedicated to create mnemonics for the given calling convention
                 var calling = CallingConventionSelector.Get(callingConvention);
-                // Push the parameters
-                t.AddLine(calling.FormatParameters(marshalledParameters.Select(p => p.Reference).ToArray()));
-                // Call the function
-                t.AddLine(calling.FormatCalling(address));
-                // Clean the parameters
-                if(calling.Cleanup == CleanupTypes.Caller)
-                    t.AddLine(calling.FormatCleaning(marshalledParameters.Length));
-                // Add the return mnemonic
-                t.AddLine("retn");
+                var references = marshalledParameters.Select(p => p.Reference).ToArray();
+
+                calling.FormatCall(address, references, t.Instructions);
+                t.Instructions.Add("ret");
             }
 
             // Clean the marshalled parameters
