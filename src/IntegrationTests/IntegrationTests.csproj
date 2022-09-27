@@ -119,7 +119,7 @@
     <Compile Include="Windows\WindowCoreTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MemorySharp\MemorySharp.csproj">
+    <ProjectReference Include="..\MemorySharp\MemorySharp.csproj">
       <Project>{78a6f97d-5ca8-4e92-8e17-2545983c9555}</Project>
       <Name>MemorySharp</Name>
     </ProjectReference>

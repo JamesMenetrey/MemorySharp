@@ -3,16 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemorySharp", "..\..\src\MemorySharp\MemorySharp.csproj", "{78A6F97D-5CA8-4E92-8E17-2545983C9555}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemorySharp", "MemorySharp\MemorySharp.csproj", "{78A6F97D-5CA8-4E92-8E17-2545983C9555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "..\..\test\IntegrationTests\IntegrationTests.csproj", "{E3EFE942-113F-46AA-9CF4-A51473D9E8B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{E3EFE942-113F-46AA-9CF4-A51473D9E8B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{84C4DD62-B81F-4116-A853-29A21EE74A99}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\.gitignore = ..\..\.gitignore
-		..\..\CHANGELOG.md = ..\..\CHANGELOG.md
-		..\..\LICENSE = ..\..\LICENSE
-		..\..\README.md = ..\..\README.md
+		..\.gitignore = ..\.gitignore
+		..\CHANGELOG.md = ..\CHANGELOG.md
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8CE5378B-EF17-465D-AB2E-1394ECA7BB7E}"
