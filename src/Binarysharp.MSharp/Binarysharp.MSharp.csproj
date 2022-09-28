@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>MemorySharp</PackageId>
+    <Title>MemorySharp</Title>
+    <Authors>Jämes Ménétrey</Authors>
+    <Company>Binarysharp</Company>
+    <Product>MemorySharp</Product>
+    <Description>MemorySharp is a C# based memory editing library targeting Windows applications, offering various functions to extract and inject data and codes into remote processes to allow interoperability.</Description>
+    <Copyright>Copyright © 2012-2022 Jämes Ménétrey</Copyright>
+    <PackageProjectUrl>https://www.binarysharp.com</PackageProjectUrl>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="keystoneengine.csharp" Version="0.9.1.1" />
+  </ItemGroup>
+
+</Project>
